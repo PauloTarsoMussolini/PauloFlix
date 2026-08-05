@@ -30,4 +30,27 @@ public class MoviesController : ControllerBase
         var result = await _tmdbService.GetMovieDetailsAsync(tmdbId, ct);
         return Ok(result);
     }
+
+    [HttpGet("movies/search")]
+    public async Task<ActionResult<PagedResultDto<MovieSummaryDto>>> Search(
+        [FromQuery] string query, [FromQuery] int page, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(query)) return BadRequest("O parametro query e obrigatorio.");
+        if (page < 1) page = 1;
+        var result = await _tmdbService.SearchMoviesAsync(query, page, ct);
+        return Ok(result);
+    }
+
+    [HttpGet("genres")]
+    public async Task<ActionResult<List<GenreDto>>> GetGenres(CancellationToken ct)
+    {
+        var result = await _tmdbService.GetGenresAsync(ct);
+        return Ok(result);
+    }
+
+    [HttpGet("providers")]
+    public ActionResult<List<ProviderDto>> GetProviders()
+    {
+        return Ok(_tmdbService.GetProviders());
+    }
 }

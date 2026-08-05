@@ -130,4 +130,46 @@ public class TmdbServiceTests
 
         client.Verify(c => c.GetMovieDetailsAsync(42, It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task SearchMoviesAsync_CallsClientOnce_WhenCacheMisses()
+    {
+        var client = new Mock<ITmdbClient>();
+        client.Setup(c => c.SearchMoviesAsync("matrix", 1, It.IsAny<CancellationToken>())).ReturnsAsync(BuildRawPage());
+
+        var service = new TmdbService(client.Object, new MemoryCache(new MemoryCacheOptions()), Options.Create(BuildOptions()));
+
+        var result = await service.SearchMoviesAsync("matrix", 1, CancellationToken.None);
+
+        Assert.Single(result.Results);
+        client.Verify(c => c.SearchMoviesAsync("matrix", 1, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetGenresAsync_CachesResult()
+    {
+        var client = new Mock<ITmdbClient>();
+        client.Setup(c => c.GetGenresAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new TmdbGenresResponse(new List<TmdbGenre> { new(28, "Acao") }));
+
+        var service = new TmdbService(client.Object, new MemoryCache(new MemoryCacheOptions()), Options.Create(BuildOptions()));
+
+        await service.GetGenresAsync(CancellationToken.None);
+        var second = await service.GetGenresAsync(CancellationToken.None);
+
+        Assert.Single(second);
+        client.Verify(c => c.GetGenresAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public void GetProviders_ReturnsConfiguredProviders()
+    {
+        var client = new Mock<ITmdbClient>();
+        var service = new TmdbService(client.Object, new MemoryCache(new MemoryCacheOptions()), Options.Create(BuildOptions()));
+
+        var providers = service.GetProviders();
+
+        Assert.Single(providers);
+        Assert.Equal("netflix", providers[0].Key);
+    }
 }

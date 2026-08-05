@@ -88,4 +88,49 @@ public class TmdbService : ITmdbService
         _cache.Set(cacheKey, result, TimeSpan.FromHours(_options.DetailCacheHours));
         return result;
     }
+
+    public async Task<PagedResultDto<MovieSummaryDto>> SearchMoviesAsync(string query, int page, CancellationToken ct)
+    {
+        var cacheKey = "search:" + query + ":" + page;
+        if (_cache.TryGetValue(cacheKey, out PagedResultDto<MovieSummaryDto>? cached))
+            return cached!;
+
+        TmdbPagedResponse<TmdbMovieSummary> raw;
+        try
+        {
+            raw = await _client.SearchMoviesAsync(query, page, ct);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            throw new TmdbUnavailableException("Nao foi possivel buscar filmes na TMDB.", ex);
+        }
+
+        var result = new PagedResultDto<MovieSummaryDto>(raw.Page, raw.TotalPages, raw.Results.Select(MapSummary).ToList());
+        _cache.Set(cacheKey, result, TimeSpan.FromHours(_options.PopularCacheHours));
+        return result;
+    }
+
+    public async Task<List<GenreDto>> GetGenresAsync(CancellationToken ct)
+    {
+        const string cacheKey = "genres";
+        if (_cache.TryGetValue(cacheKey, out List<GenreDto>? cached))
+            return cached!;
+
+        TmdbGenresResponse raw;
+        try
+        {
+            raw = await _client.GetGenresAsync(ct);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            throw new TmdbUnavailableException("Nao foi possivel buscar generos na TMDB.", ex);
+        }
+
+        var result = raw.Genres.Select(g => new GenreDto(g.Id, g.Name)).ToList();
+        _cache.Set(cacheKey, result, TimeSpan.FromDays(_options.StaticCacheDays));
+        return result;
+    }
+
+    public List<ProviderDto> GetProviders() =>
+        _options.Providers.Select(p => new ProviderDto(p.Key, p.DisplayName)).ToList();
 }
