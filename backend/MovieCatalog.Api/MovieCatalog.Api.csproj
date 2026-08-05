@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5ac124b1-e099-41c5-bff1-7979979adaeb</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+  </ItemGroup>
+
+  <Target Name="BuildAndCopyFrontend" BeforeTargets="Publish">
+    <Exec Command="npm install" WorkingDirectory="../../frontend" />
+    <Exec Command="npm run build" WorkingDirectory="../../frontend" />
+    <RemoveDir Directories="wwwroot" Condition="Exists('wwwroot')" />
+    <ItemGroup>
+      <FrontendDistFiles Include="../../frontend/dist/**/*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FrontendDistFiles)" DestinationFolder="wwwroot/%(RecursiveDir)" />
+  </Target>
+
+  <!--
+    The wwwroot glob that ASP.NET Core's static web assets pipeline uses to decide
+    which Content items to publish is evaluated at MSBuild evaluation time, which
+    happens before BuildAndCopyFrontend (or any target) runs. On a fresh checkout
+    (no pre-existing wwwroot/ directory) that means the files BuildAndCopyFrontend
+    just wrote would be invisible to the publish copy step. To guarantee the built
+    frontend is always included in the publish output - including on the very
+    first publish - explicitly add it to ResolvedFileToPublish after it has been
+    computed (execution time, not evaluation time). This is the same pattern the
+    old ASP.NET Core SPA project templates used for webpack/CRA output.
+  -->
+  <Target Name="AddFrontendFilesToPublish" AfterTargets="ComputeFilesToPublish" DependsOnTargets="BuildAndCopyFrontend">
+    <ItemGroup>
+      <_FrontendPublishFiles Include="wwwroot/**/*.*" />
+      <ResolvedFileToPublish Include="@(_FrontendPublishFiles)" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(_FrontendPublishFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>
