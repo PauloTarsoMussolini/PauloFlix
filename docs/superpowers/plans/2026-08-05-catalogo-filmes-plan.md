@@ -2123,6 +2123,7 @@ Add this block right after the TMDB/cache registrations from Task 5 (before `var
 builder.Services.AddResponseCompression();
 builder.Services.AddRateLimiter(options =>
 {
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     options.AddFixedWindowLimiter("auth", opt =>
     {
         opt.PermitLimit = 5;
@@ -2137,6 +2138,8 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 ```
+
+**Amendment (post Task 11 review):** `AddRateLimiter` defaults `RejectionStatusCode` to `503 Service Unavailable`, not `429 Too Many Requests` - the implementer caught this when the manual verification returned 503 instead of the expected 429. Added `options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;` so throttled requests are distinguishable from genuine TMDB-outage 503s (which `GlobalExceptionHandler` already uses for `TmdbUnavailableException`).
 
 Replace the `if (app.Environment.IsDevelopment()) { ... }` block with:
 
