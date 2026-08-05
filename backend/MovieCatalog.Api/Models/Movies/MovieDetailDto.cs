@@ -11,4 +11,5 @@ public record MovieDetailDto(
     int? RuntimeMinutes,
     List<GenreDto> Genres,
     List<CastMemberDto> Cast,
-    List<ProviderDto> WatchProviders);
+    List<ProviderDto> WatchProviders,
+    string? WatchLink);

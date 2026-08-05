@@ -39,7 +39,8 @@ public record TmdbWatchProvider(
     [property: JsonPropertyName("provider_name")] string ProviderName);
 
 public record TmdbWatchProviderRegion(
-    [property: JsonPropertyName("flatrate")] List<TmdbWatchProvider>? Flatrate);
+    [property: JsonPropertyName("flatrate")] List<TmdbWatchProvider>? Flatrate,
+    [property: JsonPropertyName("link")] string? Link = null);
 
 public record TmdbWatchProvidersResult(
     [property: JsonPropertyName("results")] Dictionary<string, TmdbWatchProviderRegion> Results);

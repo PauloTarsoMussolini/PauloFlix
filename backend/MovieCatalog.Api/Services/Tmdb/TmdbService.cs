@@ -65,11 +65,13 @@ public class TmdbService : ITmdbService
         }
 
         var providerByTmdbId = _options.Providers.ToDictionary(p => p.TmdbProviderId);
-        var flatrate = raw.WatchProviders?.Results.GetValueOrDefault(_options.WatchRegion)?.Flatrate ?? new();
+        var regionWatchProviders = raw.WatchProviders?.Results.GetValueOrDefault(_options.WatchRegion);
+        var flatrate = regionWatchProviders?.Flatrate ?? new();
         var providers = flatrate
             .Where(p => providerByTmdbId.ContainsKey(p.ProviderId))
             .Select(p => new ProviderDto(providerByTmdbId[p.ProviderId].Key, providerByTmdbId[p.ProviderId].DisplayName))
             .ToList();
+        var watchLink = regionWatchProviders?.Link;
 
         var cast = (raw.Credits?.Cast ?? new())
             .OrderBy(c => c.Order)
@@ -83,7 +85,7 @@ public class TmdbService : ITmdbService
             TmdbImageUrlBuilder.Backdrop(raw.BackdropPath),
             raw.ReleaseDate, raw.VoteAverage, raw.Runtime,
             raw.Genres.Select(g => new GenreDto(g.Id, g.Name)).ToList(),
-            cast, providers);
+            cast, providers, watchLink);
 
         _cache.Set(cacheKey, result, TimeSpan.FromHours(_options.DetailCacheHours));
         return result;

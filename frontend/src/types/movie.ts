@@ -42,4 +42,5 @@ export interface MovieDetail {
   genres: Genre[]
   cast: CastMember[]
   watchProviders: Provider[]
+  watchLink: string | null
 }

@@ -98,7 +98,7 @@ public class TmdbServiceTests
                 {
                     new(8, "Netflix"),
                     new(9999, "Servico Nao Curado")
-                })
+                }, "https://www.themoviedb.org/movie/42/watch?locale=BR")
             }));
 
         var client = new Mock<ITmdbClient>();
@@ -112,6 +112,23 @@ public class TmdbServiceTests
         Assert.Equal(2, result.Cast.Count);
         Assert.Single(result.WatchProviders);
         Assert.Equal("netflix", result.WatchProviders[0].Key);
+        Assert.Equal("https://www.themoviedb.org/movie/42/watch?locale=BR", result.WatchLink);
+    }
+
+    [Fact]
+    public async Task GetMovieDetailsAsync_WatchLinkIsNull_WhenRegionHasNoWatchProviders()
+    {
+        var raw = new TmdbMovieDetail(42, "Filme", "Sinopse", null, null, "2023-01-01", 7.0, null,
+            new List<TmdbGenre>(), new TmdbCredits(new List<TmdbCastMember>()), null);
+
+        var client = new Mock<ITmdbClient>();
+        client.Setup(c => c.GetMovieDetailsAsync(42, It.IsAny<CancellationToken>())).ReturnsAsync(raw);
+
+        var service = new TmdbService(client.Object, new MemoryCache(new MemoryCacheOptions()), Options.Create(BuildOptions()));
+
+        var result = await service.GetMovieDetailsAsync(42, CancellationToken.None);
+
+        Assert.Null(result.WatchLink);
     }
 
     [Fact]
