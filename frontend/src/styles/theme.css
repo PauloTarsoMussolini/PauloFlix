@@ -77,3 +77,13 @@ body {
 }
 
 button { background: var(--accent); color: var(--text); border: none; cursor: pointer; border-radius: 4px; padding: 8px 14px; }
+
+.nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px; position: sticky; top: 0; background: var(--bg); z-index: 10;
+}
+.nav-brand { color: var(--text); font-weight: bold; text-decoration: none; font-size: 1.2rem; }
+.nav-links { display: flex; align-items: center; gap: 16px; }
+.nav-links a { color: var(--text-muted); text-decoration: none; }
+.nav-user { color: var(--text-muted); }
+.watchlist-item { display: flex; flex-direction: column; gap: 6px; }
