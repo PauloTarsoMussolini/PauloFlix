@@ -612,8 +612,8 @@ using System.ComponentModel.DataAnnotations;
 namespace MovieCatalog.Api.Models.Auth;
 
 public record RegisterRequestDto(
-    [property: Required, EmailAddress] string Email,
-    [property: Required, MinLength(8)] string Password);
+    [Required, EmailAddress] string Email,
+    [Required, MinLength(8)] string Password);
 ```
 
 ```csharp
@@ -623,9 +623,11 @@ using System.ComponentModel.DataAnnotations;
 namespace MovieCatalog.Api.Models.Auth;
 
 public record LoginRequestDto(
-    [property: Required, EmailAddress] string Email,
-    [property: Required] string Password);
+    [Required, EmailAddress] string Email,
+    [Required] string Password);
 ```
+
+**Amendment (post Task 4 review):** the plan originally used `[property: Required, ...]` target specifiers. ASP.NET Core's MVC model validation pipeline throws `InvalidOperationException` for record types bound as action parameters when validation attributes target the property instead of the constructor parameter (`DefaultComplexObjectValidationStrategy.ThrowIfRecordTypeHasValidationOnProperties`) - confirmed against the live app. Corrected to plain parameter-level attributes, which is the pattern MVC's record binding actually requires.
 
 ```csharp
 // MovieCatalog.Api/Models/Auth/AuthResponseDto.cs
