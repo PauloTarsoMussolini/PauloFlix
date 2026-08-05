@@ -33,7 +33,23 @@ public class WatchlistService : IWatchlistService
             TmdbMovieId = tmdbMovieId,
             CreatedAt = DateTime.UtcNow
         });
-        await _context.SaveChangesAsync(ct);
+
+        try
+        {
+            await _context.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException)
+        {
+            foreach (var entry in _context.ChangeTracker.Entries<WatchlistItem>()
+                .Where(e => e.State == EntityState.Added))
+            {
+                entry.State = EntityState.Detached;
+            }
+
+            var existsNow = await _context.WatchlistItems
+                .AnyAsync(w => w.UserId == userId && w.TmdbMovieId == tmdbMovieId, ct);
+            if (!existsNow) throw;
+        }
     }
 
     public async Task RemoveAsync(string userId, int tmdbMovieId, CancellationToken ct)
