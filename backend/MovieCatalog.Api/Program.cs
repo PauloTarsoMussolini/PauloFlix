@@ -9,6 +9,7 @@ using MovieCatalog.Api.Identity;
 using MovieCatalog.Api.Middleware;
 using MovieCatalog.Api.Services.Auth;
 using MovieCatalog.Api.Services.Tmdb;
+using MovieCatalog.Api.Services.Watchlist;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,7 @@ builder.Services.AddHttpClient<ITmdbClient, TmdbClient>((sp, client) =>
 });
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ITmdbService, TmdbService>();
+builder.Services.AddScoped<IWatchlistService, WatchlistService>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
