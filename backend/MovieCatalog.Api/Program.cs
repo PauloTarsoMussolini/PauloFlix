@@ -55,6 +55,7 @@ builder.Services.AddHttpClient<ITmdbClient, TmdbClient>((sp, client) =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ITmdbService, TmdbService>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
