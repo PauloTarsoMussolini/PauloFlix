@@ -2858,7 +2858,7 @@ export default function HeroBanner({ movie }: { movie: MovieSummary | null }) {
 ```tsx
 // frontend/src/components/MovieModal.tsx
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { moviesApi } from '../api/movies'
 import { watchlistApi } from '../api/watchlist'
 import { useAuth } from '../context/AuthContext'
@@ -2867,6 +2867,7 @@ import type { MovieDetail } from '../types/movie'
 export default function MovieModal() {
   const { tmdbId } = useParams<{ tmdbId: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const { token } = useAuth()
   const [movie, setMovie] = useState<MovieDetail | null>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
@@ -2880,7 +2881,14 @@ export default function MovieModal() {
   }, [tmdbId])
 
   function close() {
-    navigate(-1)
+    // location.key is 'default' when there is no prior in-app history entry
+    // (a direct link, a new tab, or a refresh) - navigate(-1) in that case
+    // would leave the app entirely instead of closing back to the parent page.
+    if (location.key === 'default') {
+      navigate('/')
+    } else {
+      navigate(-1)
+    }
   }
 
   async function addToWatchlist() {
@@ -2916,6 +2924,8 @@ export default function MovieModal() {
 }
 ```
 
+**Amendment (post Task 15 review):** the plan originally had `close()` call `navigate(-1)` unconditionally. For the exact use case this route pattern exists for - a shared/direct link to `/filme/:id` - there is no prior in-app history entry, so `navigate(-1)` would leave the SPA entirely rather than closing back to a parent page. Added a `location.key === 'default'` check (react-router-dom's signal for "no prior history in this session") to fall back to `navigate('/')` in that case.
+
 - [ ] Step 3: Fill in HomePage with hero + carousels + Outlet
 
 ```tsx
@@ -2933,13 +2943,16 @@ export default function HomePage() {
   const [heroMovie, setHeroMovie] = useState<MovieSummary | null>(null)
 
   useEffect(() => {
-    moviesApi.getProviders().then(async loadedProviders => {
-      setProviders(loadedProviders)
-      if (loadedProviders.length > 0) {
-        const firstPage = await moviesApi.getPopular(loadedProviders[0].key, 1)
-        setHeroMovie(firstPage.results[0] ?? null)
-      }
-    }).catch(() => setProviders([]))
+    moviesApi.getProviders()
+      .then(loadedProviders => {
+        setProviders(loadedProviders)
+        if (loadedProviders.length > 0) {
+          moviesApi.getPopular(loadedProviders[0].key, 1)
+            .then(firstPage => setHeroMovie(firstPage.results[0] ?? null))
+            .catch(() => setHeroMovie(null))
+        }
+      })
+      .catch(() => setProviders([]))
   }, [])
 
   return (
@@ -2955,6 +2968,8 @@ export default function HomePage() {
   )
 }
 ```
+
+**Amendment (post Task 15 review):** the plan originally chained the hero-movie fetch inside the providers `.then()`, so a transient failure fetching just the hero's first popular page fell into the outer `.catch()` and reset `providers` to `[]` too - wiping the entire carousel section over a secondary fetch failure. Split into two independent promise chains so a hero-fetch failure only clears `heroMovie`, not `providers`.
 
 - [ ] Step 4: Add the modal route to App.tsx
 
