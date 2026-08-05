@@ -66,6 +66,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddResponseCompression();
 builder.Services.AddRateLimiter(options =>
 {
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     options.AddFixedWindowLimiter("auth", opt =>
     {
         opt.PermitLimit = 5;
