@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MovieCatalog.Api.Models.Movies;
 using MovieCatalog.Api.Services.Tmdb;
 
@@ -6,6 +7,7 @@ namespace MovieCatalog.Api.Controllers;
 
 [ApiController]
 [Route("api")]
+[EnableRateLimiting("catalog")]
 public class MoviesController : ControllerBase
 {
     private readonly ITmdbService _tmdbService;

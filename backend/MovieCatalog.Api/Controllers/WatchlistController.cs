@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MovieCatalog.Api.Exceptions;
 using MovieCatalog.Api.Models.Movies;
 using MovieCatalog.Api.Services.Tmdb;
@@ -11,6 +12,7 @@ namespace MovieCatalog.Api.Controllers;
 [ApiController]
 [Route("api/watchlist")]
 [Authorize]
+[EnableRateLimiting("catalog")]
 public class WatchlistController : ControllerBase
 {
     private readonly IWatchlistService _watchlistService;
