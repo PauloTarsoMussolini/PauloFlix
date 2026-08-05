@@ -3064,7 +3064,7 @@ export function useInfiniteScroll(onIntersect: () => void, enabled: boolean) {
 
 ```tsx
 // frontend/src/pages/SearchPage.tsx
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { moviesApi } from '../api/movies'
 import { useDebounce } from '../hooks/useDebounce'
@@ -3079,11 +3079,17 @@ export default function SearchPage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  // Shared across the initial-search effect and loadMore so either one can
+  // cancel whichever request (of either kind) is currently in flight - a
+  // query change must not let a stale loadMore page land after it.
+  const requestRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
+    requestRef.current?.abort()
     if (!debouncedQuery) { setMovies([]); setPage(1); setTotalPages(1); return }
 
     const controller = new AbortController()
+    requestRef.current = controller
     setStatus('loading')
     moviesApi.search(debouncedQuery, 1, controller.signal)
       .then(result => {
@@ -3099,14 +3105,17 @@ export default function SearchPage() {
 
   const loadMore = useCallback(() => {
     if (status === 'loading' || page >= totalPages) return
+    requestRef.current?.abort()
+    const controller = new AbortController()
+    requestRef.current = controller
     setStatus('loading')
-    moviesApi.search(debouncedQuery, page + 1)
+    moviesApi.search(debouncedQuery, page + 1, controller.signal)
       .then(result => {
         setMovies(prev => [...prev, ...result.results])
         setPage(result.page)
         setStatus('idle')
       })
-      .catch(() => setStatus('error'))
+      .catch(() => { if (!controller.signal.aborted) setStatus('error') })
   }, [debouncedQuery, page, totalPages, status])
 
   const sentinelRef = useInfiniteScroll(loadMore, page < totalPages)
@@ -3129,6 +3138,8 @@ export default function SearchPage() {
   )
 }
 ```
+
+**Amendment (post Task 16 review):** the plan originally gave `loadMore` no cancellation at all, violating the spec's "cancel obsolete requests" performance requirement. Concretely: scroll-triggered page 2 of "matrix" in flight, user retypes "alien" - the initial-search effect correctly replaces itself, but the outstanding `loadMore` fetch for "matrix" page 2 was untouched and would append stale results onto the "alien" list when it resolved. Added a shared `requestRef` so a new request of either kind (debounced search or load-more) aborts whatever request (of either kind) was previously in flight.
 
 - [ ] Step 4: Add the search route to App.tsx
 
@@ -3199,7 +3210,7 @@ export default function ProviderFilter({ providers, activeKey }: { providers: Pr
 
 ```tsx
 // frontend/src/pages/BrowsePage.tsx
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, Outlet } from 'react-router-dom'
 import { moviesApi } from '../api/movies'
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll'
@@ -3216,6 +3227,10 @@ export default function BrowsePage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [status, setStatus] = useState<'loading' | 'idle' | 'error'>('loading')
+  // Shared across the provider/genre effect and loadMore so either one can
+  // cancel whichever request (of either kind) is currently in flight - a
+  // provider/genre change must not let a stale loadMore page land after it.
+  const requestRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
     moviesApi.getProviders().then(setProviders).catch(() => setProviders([]))
@@ -3223,8 +3238,10 @@ export default function BrowsePage() {
   }, [])
 
   useEffect(() => {
+    requestRef.current?.abort()
     if (!providerKey) return
     const controller = new AbortController()
+    requestRef.current = controller
     setStatus('loading')
     setMovies([])
     setPage(1)
@@ -3236,14 +3253,17 @@ export default function BrowsePage() {
 
   const loadMore = useCallback(() => {
     if (!providerKey || status === 'loading' || page >= totalPages) return
+    requestRef.current?.abort()
+    const controller = new AbortController()
+    requestRef.current = controller
     setStatus('loading')
-    moviesApi.getPopular(providerKey, page + 1, genreId)
+    moviesApi.getPopular(providerKey, page + 1, genreId, controller.signal)
       .then(result => {
         setMovies(prev => [...prev, ...result.results])
         setPage(result.page)
         setStatus('idle')
       })
-      .catch(() => setStatus('error'))
+      .catch(() => { if (!controller.signal.aborted) setStatus('error') })
   }, [providerKey, genreId, page, totalPages, status])
 
   const sentinelRef = useInfiniteScroll(loadMore, page < totalPages)
@@ -3265,6 +3285,8 @@ export default function BrowsePage() {
   )
 }
 ```
+
+**Amendment (applied proactively before implementation, same defect Task 16's review found in `SearchPage`):** `loadMore` originally had no cancellation. A provider/genre change while a `loadMore` page was in flight would let stale results land after the switch. Added the same shared `requestRef` pattern used in `SearchPage` so a new request of either kind aborts whatever was previously in flight.
 
 - [ ] Step 3: Add the browse route to App.tsx
 
