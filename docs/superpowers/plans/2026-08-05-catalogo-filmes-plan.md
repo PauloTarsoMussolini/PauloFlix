@@ -6,7 +6,7 @@
 
 **Architecture:** ASP.NET Core Web API (C#, .NET 10) that also serves a React SPA build as static files from the same site (no CORS). SQL Server via EF Core stores only Identity users and a minimal `WatchlistItems` table; all movie data comes from TMDB through a caching proxy service (`TmdbService` + `IMemoryCache`). JWT Bearer auth via ASP.NET Core Identity, no refresh tokens.
 
-**Tech Stack:** .NET 10 SDK, ASP.NET Core Web API (Controllers), EF Core 10 (SQL Server + InMemory for tests), ASP.NET Core Identity, JWT Bearer auth, xUnit + Moq, React 18 + TypeScript via Vite, react-router-dom v6.
+**Tech Stack:** .NET 10 SDK, ASP.NET Core Web API (Controllers), EF Core 10 (SQL Server + InMemory for tests), ASP.NET Core Identity, JWT Bearer auth, xUnit + Moq, React 19 + TypeScript via Vite, react-router-dom v7 (amended from React 18/v6 after Task 12 - Vite scaffolded the versions current at implementation time; the routing APIs used in this plan - BrowserRouter, Routes, Route, Outlet, useParams, useNavigate, Link - are unchanged between v6 and v7).
 
 **Amendment (post Task 1 review):** the plan originally specified .NET 8; the dev machine has only .NET 9/10 SDKs installed, so the target was updated to .NET 10 (current LTS as of this writing) after Task 1's scaffold. All later tasks' EF Core/ASP.NET Core package references should resolve to the 10.x line accordingly.
 
