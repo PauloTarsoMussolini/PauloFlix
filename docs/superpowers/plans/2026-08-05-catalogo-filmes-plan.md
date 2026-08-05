@@ -1922,7 +1922,27 @@ public class WatchlistService : IWatchlistService
             TmdbMovieId = tmdbMovieId,
             CreatedAt = DateTime.UtcNow
         });
-        await _context.SaveChangesAsync(ct);
+
+        try
+        {
+            await _context.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException)
+        {
+            foreach (var entry in _context.ChangeTracker.Entries<WatchlistItem>()
+                .Where(e => e.State == EntityState.Added))
+            {
+                entry.State = EntityState.Detached;
+            }
+
+            // Only swallow this as a benign race (a concurrent AddAsync for the same
+            // (userId, tmdbMovieId) won the unique index) if the row now actually
+            // exists. Any other cause of the failure - the row still isn't there -
+            // is a real error and must surface to the caller.
+            var existsNow = await _context.WatchlistItems
+                .AnyAsync(w => w.UserId == userId && w.TmdbMovieId == tmdbMovieId, ct);
+            if (!existsNow) throw;
+        }
     }
 
     public async Task RemoveAsync(string userId, int tmdbMovieId, CancellationToken ct)
