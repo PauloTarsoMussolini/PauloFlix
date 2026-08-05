@@ -3514,9 +3514,32 @@ Add this `<Target>` element inside the `<Project>` root of `backend/MovieCatalog
   </ItemGroup>
   <Copy SourceFiles="@(FrontendDistFiles)" DestinationFolder="wwwroot/%(RecursiveDir)" />
 </Target>
+
+<!--
+  The wwwroot glob that ASP.NET Core's static web assets pipeline uses to decide
+  which Content items to publish is evaluated at MSBuild evaluation time, which
+  happens before BuildAndCopyFrontend (or any target) runs. On a fresh checkout
+  (no pre-existing wwwroot/ directory) that means the files BuildAndCopyFrontend
+  just wrote would be invisible to the publish copy step. To guarantee the built
+  frontend is always included in the publish output - including on the very
+  first publish - explicitly add it to ResolvedFileToPublish after it has been
+  computed (execution time, not evaluation time). This is the same pattern the
+  old ASP.NET Core SPA project templates used for webpack/CRA output.
+-->
+<Target Name="AddFrontendFilesToPublish" AfterTargets="ComputeFilesToPublish" DependsOnTargets="BuildAndCopyFrontend">
+  <ItemGroup>
+    <_FrontendPublishFiles Include="wwwroot/**/*.*" />
+    <ResolvedFileToPublish Include="@(_FrontendPublishFiles)" Exclude="@(ResolvedFileToPublish)">
+      <RelativePath>%(_FrontendPublishFiles.Identity)</RelativePath>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </ResolvedFileToPublish>
+  </ItemGroup>
+</Target>
 ```
 
 This runs automatically before `dotnet publish` (which is what a GitHub-triggered deploy on SmarterASP.NET runs), so a single publish produces both the API and the built React app in one artifact - no separate CI pipeline needed.
+
+**Amendment (post Task 19 review):** the plan originally had only `BuildAndCopyFrontend`. On a genuinely fresh checkout (no pre-existing `wwwroot/`), the static-web-assets file glob ASP.NET Core's publish pipeline uses is computed at MSBuild evaluation time, before any target - including `BuildAndCopyFrontend` - has run, so the very first publish shipped an empty `wwwroot`. Added `AddFrontendFilesToPublish`, hooked at `AfterTargets="ComputeFilesToPublish"`, to explicitly add the built frontend to `ResolvedFileToPublish` after evaluation - the same workaround pattern the legacy ASP.NET Core SPA templates used. Verified against a truly clean clone by the implementer.
 
 - [ ] Step 2: Add SPA static file serving and fallback routing to Program.cs
 
