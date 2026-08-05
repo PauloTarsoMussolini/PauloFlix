@@ -6,6 +6,18 @@ export function setAuthToken(token: string | null) {
   authToken = token
 }
 
+export class ApiError extends Error {
+  status: number
+  body: unknown
+
+  constructor(status: number, body: unknown, message: string) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+    this.body = body
+  }
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
   headers.set('Content-Type', 'application/json')
@@ -13,7 +25,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const response = await fetch(BASE_URL + path, { ...options, headers })
   if (!response.ok) {
-    throw new Error('Erro na requisicao: ' + response.status)
+    const body = await response.json().catch(() => undefined)
+    throw new ApiError(response.status, body, 'Erro na requisicao: ' + response.status)
   }
   if (response.status === 204) return undefined as T
   return response.json() as Promise<T>
