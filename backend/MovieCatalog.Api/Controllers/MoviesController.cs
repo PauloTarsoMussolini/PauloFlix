@@ -23,4 +23,11 @@ public class MoviesController : ControllerBase
         var result = await _tmdbService.GetPopularByProviderAsync(provider, genre, page, ct);
         return Ok(result);
     }
+
+    [HttpGet("movies/{tmdbId:int}")]
+    public async Task<ActionResult<MovieDetailDto>> GetDetails(int tmdbId, CancellationToken ct)
+    {
+        var result = await _tmdbService.GetMovieDetailsAsync(tmdbId, ct);
+        return Ok(result);
+    }
 }

@@ -47,4 +47,45 @@ public class TmdbService : ITmdbService
         TmdbImageUrlBuilder.Poster(m.PosterPath),
         TmdbImageUrlBuilder.Backdrop(m.BackdropPath),
         m.ReleaseDate, m.VoteAverage);
+
+    public async Task<MovieDetailDto> GetMovieDetailsAsync(int tmdbId, CancellationToken ct)
+    {
+        var cacheKey = "detail:" + tmdbId;
+        if (_cache.TryGetValue(cacheKey, out MovieDetailDto? cached))
+            return cached!;
+
+        TmdbMovieDetail raw;
+        try
+        {
+            raw = await _client.GetMovieDetailsAsync(tmdbId, ct);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            throw new TmdbUnavailableException("Nao foi possivel buscar detalhes do filme " + tmdbId + " na TMDB.", ex);
+        }
+
+        var providerByTmdbId = _options.Providers.ToDictionary(p => p.TmdbProviderId);
+        var flatrate = raw.WatchProviders?.Results.GetValueOrDefault(_options.WatchRegion)?.Flatrate ?? new();
+        var providers = flatrate
+            .Where(p => providerByTmdbId.ContainsKey(p.ProviderId))
+            .Select(p => new ProviderDto(providerByTmdbId[p.ProviderId].Key, providerByTmdbId[p.ProviderId].DisplayName))
+            .ToList();
+
+        var cast = (raw.Credits?.Cast ?? new())
+            .OrderBy(c => c.Order)
+            .Take(10)
+            .Select(c => new CastMemberDto(c.Name, c.Character, TmdbImageUrlBuilder.Profile(c.ProfilePath)))
+            .ToList();
+
+        var result = new MovieDetailDto(
+            raw.Id, raw.Title, raw.Overview,
+            TmdbImageUrlBuilder.Poster(raw.PosterPath),
+            TmdbImageUrlBuilder.Backdrop(raw.BackdropPath),
+            raw.ReleaseDate, raw.VoteAverage, raw.Runtime,
+            raw.Genres.Select(g => new GenreDto(g.Id, g.Name)).ToList(),
+            cast, providers);
+
+        _cache.Set(cacheKey, result, TimeSpan.FromHours(_options.DetailCacheHours));
+        return result;
+    }
 }
