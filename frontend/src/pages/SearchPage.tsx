@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { moviesApi } from '../api/movies'
 import { useDebounce } from '../hooks/useDebounce'
@@ -13,11 +13,14 @@ export default function SearchPage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const requestRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
+    requestRef.current?.abort()
     if (!debouncedQuery) { setMovies([]); setPage(1); setTotalPages(1); return }
 
     const controller = new AbortController()
+    requestRef.current = controller
     setStatus('loading')
     moviesApi.search(debouncedQuery, 1, controller.signal)
       .then(result => {
@@ -33,14 +36,17 @@ export default function SearchPage() {
 
   const loadMore = useCallback(() => {
     if (status === 'loading' || page >= totalPages) return
+    requestRef.current?.abort()
+    const controller = new AbortController()
+    requestRef.current = controller
     setStatus('loading')
-    moviesApi.search(debouncedQuery, page + 1)
+    moviesApi.search(debouncedQuery, page + 1, controller.signal)
       .then(result => {
         setMovies(prev => [...prev, ...result.results])
         setPage(result.page)
         setStatus('idle')
       })
-      .catch(() => setStatus('error'))
+      .catch(() => { if (!controller.signal.aborted) setStatus('error') })
   }, [debouncedQuery, page, totalPages, status])
 
   const sentinelRef = useInfiniteScroll(loadMore, page < totalPages)
