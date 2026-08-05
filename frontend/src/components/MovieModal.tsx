@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { moviesApi } from '../api/movies'
 import { watchlistApi } from '../api/watchlist'
 import { useAuth } from '../context/AuthContext'
@@ -8,6 +8,7 @@ import type { MovieDetail } from '../types/movie'
 export default function MovieModal() {
   const { tmdbId } = useParams<{ tmdbId: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const { token } = useAuth()
   const [movie, setMovie] = useState<MovieDetail | null>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
@@ -21,7 +22,14 @@ export default function MovieModal() {
   }, [tmdbId])
 
   function close() {
-    navigate(-1)
+    // location.key is 'default' when there is no prior in-app history entry
+    // (a direct link, a new tab, or a refresh) - navigate(-1) in that case
+    // would leave the app entirely instead of closing back to the parent page.
+    if (location.key === 'default') {
+      navigate('/')
+    } else {
+      navigate(-1)
+    }
   }
 
   async function addToWatchlist() {

@@ -11,13 +11,16 @@ export default function HomePage() {
   const [heroMovie, setHeroMovie] = useState<MovieSummary | null>(null)
 
   useEffect(() => {
-    moviesApi.getProviders().then(async loadedProviders => {
-      setProviders(loadedProviders)
-      if (loadedProviders.length > 0) {
-        const firstPage = await moviesApi.getPopular(loadedProviders[0].key, 1)
-        setHeroMovie(firstPage.results[0] ?? null)
-      }
-    }).catch(() => setProviders([]))
+    moviesApi.getProviders()
+      .then(loadedProviders => {
+        setProviders(loadedProviders)
+        if (loadedProviders.length > 0) {
+          moviesApi.getPopular(loadedProviders[0].key, 1)
+            .then(firstPage => setHeroMovie(firstPage.results[0] ?? null))
+            .catch(() => setHeroMovie(null))
+        }
+      })
+      .catch(() => setProviders([]))
   }, [])
 
   return (
