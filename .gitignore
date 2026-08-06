@@ -1,7 +1,5 @@
 .superpowers/
 .claude/
-backend/**/bin/
-backend/**/obj/
 
 # Logs
 logs

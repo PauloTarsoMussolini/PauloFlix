@@ -15,7 +15,7 @@ Abre em `http://localhost:5173` e faz proxy de `/api` para `https://localhost:72
 
     npm run build
 
-Por padrão, o build usa `/api` como caminho relativo da API (funciona quando front-end e back-end estão na mesma origem). Para apontar para uma API em outro domínio, defina `VITE_API_BASE_URL` antes do build:
+Builds de produção precisam definir `VITE_API_BASE_URL`, apontando para a API publicada — este repositório é sempre implantado como um site estático separado do back-end, então não existe cenário de produção em que as duas origens coincidam. O fallback para `/api` como caminho relativo só existe para funcionar com o proxy do `npm run dev` (veja acima); usá-lo em produção faz as chamadas à API caírem no rewrite do `web.config` e retornarem o próprio `index.html`. Defina `VITE_API_BASE_URL` antes do build:
 
     VITE_API_BASE_URL=https://api.exemplo.com npm run build
 
