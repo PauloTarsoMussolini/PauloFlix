@@ -1,40 +1,26 @@
-# Catalogo de Filmes
+# PauloFlix — Front-end
 
-Catalogo/descoberta de filmes estilo Netflix, usando a API da TMDB. Ver `docs/superpowers/specs/2026-08-05-catalogo-filmes-design.md` para o design completo.
+Catálogo/descoberta de filmes estilo Netflix, usando a API da TMDB como fonte de dados. Consome a API do repositório separado https://github.com/PauloTarsoMussolini/PauloFlix-Api.
+
+Ver `docs/superpowers/specs/2026-08-05-catalogo-filmes-design.md` para o design completo da aplicação, e `2026-08-05-separacao-backend-frontend-design.md` para o design da separação entre front-end e back-end.
 
 ## Rodando localmente
 
-Backend:
-
-    cd backend/MovieCatalog.Api
-    dotnet user-secrets set "Tmdb:ReadAccessToken" "<seu token>"
-    dotnet user-secrets set "Jwt:Key" "<qualquer string aleatoria de 32+ caracteres>"
-    dotnet ef database update
-    dotnet run --launch-profile https
-
-O projeto tem dois launch profiles (`http` na porta 5128, `https` na porta 7299). O proxy de dev do frontend (`frontend/vite.config.ts`) aponta para a porta `https` (7299), entao rode com `--launch-profile https` - sem essa flag, `dotnet run` usa o profile `http` por padrao e as chamadas da API do frontend falham com connection refused.
-
-Frontend (em outro terminal):
-
-    cd frontend
     npm install
     npm run dev
 
+Abre em `http://localhost:5173` e faz proxy de `/api` para `https://localhost:7299` (a API rodando localmente a partir do repositório `PauloFlix-Api` — ver o README de lá para subir o back-end).
+
+## Build de produção
+
+    npm run build
+
+Por padrão, o build usa `/api` como caminho relativo da API (funciona quando front-end e back-end estão na mesma origem). Para apontar para uma API em outro domínio, defina `VITE_API_BASE_URL` antes do build:
+
+    VITE_API_BASE_URL=https://api.exemplo.com npm run build
+
 ## Deploy no SmarterASP.NET
 
-O deploy via GitHub do SmarterASP.NET roda `dotnet publish` no projeto `backend/MovieCatalog.Api`, que builda o React automaticamente (ver `MovieCatalog.Api.csproj`) e publica tudo como um unico site.
+Este front-end é publicado como um site próprio no SmarterASP.NET, separado do site da API, com build automático (Node) a partir do git push. Configure `VITE_API_BASE_URL` como variável de ambiente de build do site, apontando para o domínio da API em produção.
 
-**Dependencia de Node/npm:** o target MSBuild `BuildAndCopyFrontend` no `.csproj` roda `npm install` e `npm run build` a cada `dotnet publish`. Isso significa que o ambiente de build do SmarterASP.NET precisa ter Node.js/npm disponivel - sem isso, `dotnet publish` falha. Se a plataforma de destino nao puder rodar npm, uma alternativa e buildar o frontend separadamente (`npm run build` localmente) e commitar/enviar um `wwwroot` ja pronto em vez de depender do build automatico durante o publish (nao implementado atualmente - documentado aqui apenas como fallback).
-
-Antes do primeiro deploy, crie estas variaveis de ambiente no pool do SmarterASP.NET:
-
-| Variavel | Valor |
-|---|---|
-| `Tmdb__ReadAccessToken` | Seu TMDB Read Access Token (v4) |
-| `ConnectionStrings__DefaultConnection` | Connection string do SQL Server do plano |
-| `Jwt__Key` | String aleatoria, minimo 32 caracteres, unica para este projeto |
-| `ASPNETCORE_ENVIRONMENT` | `Production` |
-
-Depois do primeiro deploy, aplique as migrations no banco do plano (rode localmente apontando a connection string de producao, ou via console do SmarterASP.NET se disponivel):
-
-    dotnet ef database update --connection "<connection string de producao>"
+O roteamento client-side (React Router) depende de `public/web.config` (URL Rewrite do IIS) para funcionar em acesso direto a rotas como `/streaming/netflix` — sem isso, essas URLs retornam 404.
