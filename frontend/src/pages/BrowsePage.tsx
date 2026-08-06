@@ -63,10 +63,25 @@ export default function BrowsePage() {
         <option value="">Todos os generos</option>
         {genres.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
       </select>
+      {status === 'idle' && movies.length === 0 && (
+        <div className="empty-state">
+          <h2>Nenhum filme por aqui</h2>
+          <p>Tente outro genero ou streaming.</p>
+        </div>
+      )}
       <div className="movie-grid">
         {movies.map(movie => <MovieCard key={movie.tmdbId} movie={movie} basePath={'/streaming/' + providerKey} />)}
+        {status === 'loading' && movies.length === 0 && Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="skeleton-card">
+            <div className="skeleton-poster" />
+            <div className="skeleton-lines">
+              <div className="skeleton-line" />
+              <div className="skeleton-line short" />
+            </div>
+          </div>
+        ))}
       </div>
-      {status === 'error' && <p>Nao foi possivel carregar agora. Tente novamente.</p>}
+      {status === 'error' && <p className="state-message">Nao foi possivel carregar agora. Tente novamente.</p>}
       <div ref={sentinelRef} />
       <Outlet />
     </div>

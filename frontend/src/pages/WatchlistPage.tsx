@@ -28,14 +28,30 @@ export default function WatchlistPage() {
     }
   }
 
-  if (status === 'loading') return <p>Carregando...</p>
-  if (status === 'error') return <p>Nao foi possivel carregar sua lista agora.</p>
+  if (status === 'error') return <p className="state-message">Nao foi possivel carregar sua lista agora.</p>
 
   return (
     <div className="watchlist-page">
-      <h1>Minha Lista</h1>
+      <div className="page-heading">
+        <h1>Minha Lista</h1>
+      </div>
       {removeError && <p className="form-error">{removeError}</p>}
+      {status === 'ready' && movies.length === 0 && (
+        <div className="empty-state">
+          <h2>Sua lista esta vazia</h2>
+          <p>Adicione filmes a partir da busca ou dos streamings para ve-los aqui.</p>
+        </div>
+      )}
       <div className="movie-grid">
+        {status === 'loading' && Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="skeleton-card">
+            <div className="skeleton-poster" />
+            <div className="skeleton-lines">
+              <div className="skeleton-line" />
+              <div className="skeleton-line short" />
+            </div>
+          </div>
+        ))}
         {movies.map(movie => (
           <div key={movie.tmdbId} className="watchlist-item">
             <MovieCard movie={movie} basePath="/minha-lista" />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { moviesApi } from '../api/movies'
 import type { MovieSummary } from '../types/movie'
 import MovieCard from './MovieCard'
@@ -6,6 +6,7 @@ import MovieCard from './MovieCard'
 export default function MovieCarousel({ title, providerKey, basePath }: { title: string; providerKey: string; basePath: string }) {
   const [movies, setMovies] = useState<MovieSummary[]>([])
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  const rowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -20,13 +21,35 @@ export default function MovieCarousel({ title, providerKey, basePath }: { title:
     return <p className="carousel-error">Nao foi possivel carregar "{title}" agora.</p>
   }
 
+  function scrollBy(amount: number) {
+    rowRef.current?.scrollBy({ left: amount, behavior: 'smooth' })
+  }
+
   return (
     <section className="carousel">
-      <h2>{title}</h2>
-      <div className="carousel-row">
-        {status === 'loading'
-          ? <p>Carregando...</p>
-          : movies.map(movie => <MovieCard key={movie.tmdbId} movie={movie} basePath={basePath} />)}
+      <div className="carousel-header">
+        <h2>{title}</h2>
+      </div>
+      <div className="carousel-row-wrap">
+        <div className="carousel-row" ref={rowRef}>
+          {status === 'loading'
+            ? Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton-poster" />
+                <div className="skeleton-lines">
+                  <div className="skeleton-line" />
+                  <div className="skeleton-line short" />
+                </div>
+              </div>
+            ))
+            : movies.map(movie => <MovieCard key={movie.tmdbId} movie={movie} basePath={basePath} />)}
+        </div>
+        {status === 'ready' && movies.length > 0 && (
+          <>
+            <button type="button" className="carousel-arrow prev" onClick={() => scrollBy(-640)} aria-label={'Voltar em ' + title}>&#8249;</button>
+            <button type="button" className="carousel-arrow next" onClick={() => scrollBy(640)} aria-label={'Avancar em ' + title}>&#8250;</button>
+          </>
+        )}
       </div>
     </section>
   )
