@@ -17,7 +17,7 @@ export default function NavBar() {
   return (
     <>
       <nav className="nav-bar">
-        <Link to="/" className="nav-brand">Catálogo</Link>
+        <Link to="/" className="nav-brand">PauloFlix</Link>
         <HeaderSearch onSelect={setOpenMovieId} />
         <div className="nav-links">
           {token && <Link to="/minha-lista">Minha Lista</Link>}

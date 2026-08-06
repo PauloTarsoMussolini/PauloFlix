@@ -1,6 +1,6 @@
 # PauloFlix — Front-end
 
-Catálogo/descoberta de filmes estilo Netflix, usando a API da TMDB como fonte de dados. Consome a API do repositório separado https://github.com/PauloTarsoMussolini/PauloFlix-Api.
+PauloFlix — descoberta de filmes estilo Netflix, usando a API da TMDB como fonte de dados. Consome a API do repositório separado https://github.com/PauloTarsoMussolini/PauloFlix-Api.
 
 Ver `docs/superpowers/specs/2026-08-05-catalogo-filmes-design.md` para o design completo da aplicação, e `2026-08-05-separacao-backend-frontend-design.md` para o design da separação entre front-end e back-end.
 
