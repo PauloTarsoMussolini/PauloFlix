@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:7299',
+        target: 'https://pauloflix-api.paulomussolini.net.br',
         changeOrigin: true,
         secure: false
       }
