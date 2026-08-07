@@ -662,6 +662,9 @@ select {
   padding: 8px 12px;
   font-size: 0.875rem;
 }
+/* A validacao de senha pode reprovar varias regras de uma vez. */
+ul.form-error { margin: 0; padding: 8px 12px 8px 28px; }
+ul.form-error li + li { margin-top: 4px; }
 
 /* ---------- Provider filter ---------- */
 
@@ -717,6 +720,27 @@ select {
 .auth-form input:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
 .auth-form input::placeholder { color: var(--text-muted); }
 .form-hint { color: var(--text-muted); font-size: 0.8125rem; margin: -6px 0 0; line-height: 1.5; }
+.form-link {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.form-link:hover { color: var(--text); }
+/* Acao secundaria dentro do formulario: age como link, mas nao navega. */
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+}
+.link-button:hover:not(:disabled) { text-decoration: underline; }
+.link-button:disabled { color: var(--text-muted); cursor: default; }
 
 /* ---------- Empty / status states ---------- */
 

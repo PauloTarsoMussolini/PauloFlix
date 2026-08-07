@@ -4,26 +4,27 @@ import { setAuthToken } from '../api/client'
 interface AuthState {
   token: string | null
   email: string | null
+  nome: string | null
 }
 
 interface AuthContextValue extends AuthState {
-  login: (token: string, email: string) => void
+  login: (token: string, email: string, nome: string) => void
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({ token: null, email: null })
+  const [state, setState] = useState<AuthState>({ token: null, email: null, nome: null })
 
-  function login(token: string, email: string) {
+  function login(token: string, email: string, nome: string) {
     setAuthToken(token)
-    setState({ token, email })
+    setState({ token, email, nome })
   }
 
   function logout() {
     setAuthToken(null)
-    setState({ token: null, email: null })
+    setState({ token: null, email: null, nome: null })
   }
 
   return (

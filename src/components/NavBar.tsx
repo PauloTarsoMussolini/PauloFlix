@@ -5,7 +5,7 @@ import HeaderSearch from './HeaderSearch'
 import MovieModal from './MovieModal'
 
 export default function NavBar() {
-  const { token, email, logout } = useAuth()
+  const { token, email, nome, logout } = useAuth()
   const navigate = useNavigate()
   const [openMovieId, setOpenMovieId] = useState<number | null>(null)
 
@@ -23,7 +23,8 @@ export default function NavBar() {
           {token && <Link to="/minha-lista">Minha Lista</Link>}
           {token ? (
             <>
-              <span className="nav-user">{email}</span>
+              {/* Contas criadas antes da ativacao por e-mail nao tem nome. */}
+              <span className="nav-user">{nome || email}</span>
               <button onClick={handleLogout}>Sair</button>
             </>
           ) : (
