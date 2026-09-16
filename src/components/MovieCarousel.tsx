@@ -18,7 +18,7 @@ export default function MovieCarousel({ title, providerKey, basePath }: { title:
   }, [providerKey])
 
   if (status === 'error') {
-    return <p className="carousel-error">Nao foi possivel carregar "{title}" agora.</p>
+    return <p className="carousel-error">Não foi possível carregar "{title}" agora.</p>
   }
 
   function scrollBy(amount: number) {
@@ -47,7 +47,7 @@ export default function MovieCarousel({ title, providerKey, basePath }: { title:
         {status === 'ready' && movies.length > 0 && (
           <>
             <button type="button" className="carousel-arrow prev" onClick={() => scrollBy(-640)} aria-label={'Voltar em ' + title}>&#8249;</button>
-            <button type="button" className="carousel-arrow next" onClick={() => scrollBy(640)} aria-label={'Avancar em ' + title}>&#8250;</button>
+            <button type="button" className="carousel-arrow next" onClick={() => scrollBy(640)} aria-label={'Avançar em ' + title}>&#8250;</button>
           </>
         )}
       </div>

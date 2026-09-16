@@ -88,7 +88,7 @@ export default function MovieModal({ tmdbId, onClose }: { tmdbId: number; onClos
               {token && (
                 <div className="watchlist-action">
                   <button onClick={addToWatchlist} disabled={watchlistStatus === 'adding' || watchlistStatus === 'added'}>
-                    {watchlistStatus === 'added' ? 'Adicionado' : watchlistStatus === 'adding' ? 'Adicionando...' : '+ Minha Lista'}
+                    {watchlistStatus === 'added' ? 'Adicionado' : watchlistStatus === 'adding' ? 'Adicionando...' : '+ Minha lista'}
                   </button>
                   {watchlistStatus === 'error' && watchlistError && <p className="form-error">{watchlistError}</p>}
                 </div>

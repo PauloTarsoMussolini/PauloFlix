@@ -21,7 +21,7 @@ export default function RegisterPage() {
       setError(
         err instanceof ApiError && err.firstDescription
           ? err.firstDescription
-          : 'Nao foi possivel concluir o cadastro. Verifique os dados e tente novamente.'
+          : 'Não foi possível concluir o cadastro. Verifique os dados e tente novamente.'
       )
     } finally {
       setSubmitting(false)
@@ -35,7 +35,7 @@ export default function RegisterPage() {
       <div className="auth-form">
         <h1>Verifique seu e-mail</h1>
         <p className="form-hint">
-          Se o e-mail informado for valido, voce recebera uma mensagem com o link para criar
+          Se o e-mail informado for válido, você receberá uma mensagem com o link para criar
           sua senha e ativar a conta. O link vale por 1 hora.
         </p>
         <Link to="/login" className="form-link">Ir para o login</Link>
@@ -47,7 +47,7 @@ export default function RegisterPage() {
     <form className="auth-form" onSubmit={handleSubmit}>
       <h1>Criar conta</h1>
       <p className="form-hint">
-        Enviaremos um link por e-mail para voce confirmar o endereco e escolher sua senha.
+        Enviaremos um link por e-mail para você confirmar o endereço e escolher sua senha.
       </p>
       <input
         type="text"

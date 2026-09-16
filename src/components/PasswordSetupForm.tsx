@@ -49,9 +49,9 @@ export default function PasswordSetupForm({
   if (!userId || !token) {
     return (
       <div className="auth-form">
-        <h1>Link invalido</h1>
+        <h1>Link inválido</h1>
         <p className="form-hint">
-          Este endereco esta incompleto. Abra o link exatamente como ele chegou no seu e-mail.
+          Este endereço está incompleto. Abra o link exatamente como ele chegou no seu e-mail.
         </p>
         <Link to={recoveryPath} className="form-link">Solicitar um novo link</Link>
       </div>
@@ -63,8 +63,8 @@ export default function PasswordSetupForm({
       <div className="auth-form">
         <h1>Link expirado</h1>
         <p className="form-hint">
-          Este link nao vale mais — ele expira 1 hora depois de ser enviado, e so pode ser
-          usado uma vez. Peca um novo para continuar.
+          Este link não vale mais — ele expira 1 hora depois de ser enviado, e só pode ser
+          usado uma vez. Peça um novo para continuar.
         </p>
         <Link to={recoveryPath} className="form-link">Solicitar um novo link</Link>
       </div>
@@ -75,7 +75,7 @@ export default function PasswordSetupForm({
     e.preventDefault()
 
     const problems = validatePassword(password)
-    if (password !== confirmPassword) problems.push('As senhas nao conferem.')
+    if (password !== confirmPassword) problems.push('As senhas não conferem.')
     if (problems.length > 0) {
       setErrors(problems)
       return
@@ -95,7 +95,7 @@ export default function PasswordSetupForm({
       setErrors(
         err instanceof ApiError && err.details.length > 0
           ? err.details.map(detail => detail.description)
-          : ['Nao foi possivel concluir. Tente novamente.']
+          : ['Não foi possível concluir. Tente novamente.']
       )
     } finally {
       setSubmitting(false)

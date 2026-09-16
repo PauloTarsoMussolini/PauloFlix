@@ -32,9 +32,9 @@ export default function LoginPage() {
       // 403 depois de conferir a senha, entao chegar aqui ja prova a credencial.
       if (err instanceof ApiError && err.code === 'email_not_confirmed') {
         setNeedsActivation(true)
-        setError('Sua conta ainda nao foi ativada. Confirme seu e-mail para entrar.')
+        setError('Sua conta ainda não foi ativada. Confirme seu e-mail para entrar.')
       } else {
-        setError('E-mail ou senha invalidos.')
+        setError('E-mail ou senha inválidos.')
       }
     } finally {
       setSubmitting(false)
@@ -75,11 +75,11 @@ export default function LoginPage() {
       {needsActivation && (
         resend === 'sent' ? (
           <p className="form-hint">
-            Enviamos um novo link de ativacao para {email}. Ele vale por 1 hora.
+            Enviamos um novo link de ativação para {email}. Ele vale por 1 hora.
           </p>
         ) : (
           <button type="button" className="link-button" onClick={handleResend} disabled={resend === 'sending'}>
-            {resend === 'sending' ? 'Enviando...' : 'Reenviar link de ativacao'}
+            {resend === 'sending' ? 'Enviando...' : 'Reenviar link de ativação'}
           </button>
         )
       )}

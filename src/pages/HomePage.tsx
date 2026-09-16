@@ -27,7 +27,7 @@ export default function HomePage() {
     <div className="home-page">
       <HeroBanner movie={heroMovie} />
       {providers.map(provider => (
-        <ErrorBoundary key={provider.key} fallback={<p className="carousel-error">Nao foi possivel carregar esta secao.</p>}>
+        <ErrorBoundary key={provider.key} fallback={<p className="carousel-error">Não foi possível carregar esta seção.</p>}>
           <MovieCarousel title={'Em alta na ' + provider.displayName} providerKey={provider.key} basePath="" />
         </ErrorBoundary>
       ))}

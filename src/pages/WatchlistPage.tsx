@@ -24,22 +24,22 @@ export default function WatchlistPage() {
       // Removal failed - the item is still on the backend list, so leave it
       // in local state too and just surface the error instead of an
       // unhandled rejection.
-      setRemoveError('Nao foi possivel remover o filme agora. Tente novamente.')
+      setRemoveError('Não foi possível remover o filme agora. Tente novamente.')
     }
   }
 
-  if (status === 'error') return <p className="state-message">Nao foi possivel carregar sua lista agora.</p>
+  if (status === 'error') return <p className="state-message">Não foi possível carregar sua lista agora.</p>
 
   return (
     <div className="watchlist-page">
       <div className="page-heading">
-        <h1>Minha Lista</h1>
+        <h1>Minha lista</h1>
       </div>
       {removeError && <p className="form-error">{removeError}</p>}
       {status === 'ready' && movies.length === 0 && (
         <div className="empty-state">
-          <h2>Sua lista esta vazia</h2>
-          <p>Adicione filmes a partir da busca ou dos streamings para ve-los aqui.</p>
+          <h2>Sua lista está vazia</h2>
+          <p>Adicione filmes a partir da busca ou dos streamings para vê-los aqui.</p>
         </div>
       )}
       <div className="movie-grid">

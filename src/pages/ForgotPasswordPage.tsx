@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
       await authApi.forgotPassword(email)
       setSent(true)
     } catch {
-      setError('Nao foi possivel enviar agora. Tente novamente em alguns instantes.')
+      setError('Não foi possível enviar agora. Tente novamente em alguns instantes.')
     } finally {
       setSubmitting(false)
     }
@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
       <div className="auth-form">
         <h1>Verifique seu e-mail</h1>
         <p className="form-hint">
-          Se o e-mail informado tiver uma conta, voce recebera uma mensagem com o link para
+          Se o e-mail informado tiver uma conta, você receberá uma mensagem com o link para
           redefinir a senha. O link vale por 1 hora.
         </p>
         <Link to="/login" className="form-link">Voltar para o login</Link>
@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
     <form className="auth-form" onSubmit={handleSubmit}>
       <h1>Esqueci a senha</h1>
       <p className="form-hint">
-        Informe seu e-mail e enviaremos um link para voce criar uma senha nova.
+        Informe seu e-mail e enviaremos um link para você criar uma senha nova.
       </p>
       <input
         type="email"

@@ -20,7 +20,7 @@ export default function NavBar() {
         <Link to="/" className="nav-brand">PauloFlix</Link>
         <HeaderSearch onSelect={setOpenMovieId} />
         <div className="nav-links">
-          {token && <Link to="/minha-lista">Minha Lista</Link>}
+          {token && <Link to="/minha-lista">Minha lista</Link>}
           {token ? (
             <>
               {/* Contas criadas antes da ativacao por e-mail nao tem nome. */}

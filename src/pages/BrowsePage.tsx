@@ -60,13 +60,13 @@ export default function BrowsePage() {
     <div className="browse-page">
       <ProviderFilter providers={providers} activeKey={providerKey} />
       <select value={genreId ?? ''} onChange={e => setGenreId(e.target.value ? Number(e.target.value) : undefined)}>
-        <option value="">Todos os generos</option>
+        <option value="">Todos os gêneros</option>
         {genres.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
       </select>
       {status === 'idle' && movies.length === 0 && (
         <div className="empty-state">
           <h2>Nenhum filme por aqui</h2>
-          <p>Tente outro genero ou streaming.</p>
+          <p>Tente outro gênero ou streaming.</p>
         </div>
       )}
       <div className="movie-grid">
@@ -81,7 +81,7 @@ export default function BrowsePage() {
           </div>
         ))}
       </div>
-      {status === 'error' && <p className="state-message">Nao foi possivel carregar agora. Tente novamente.</p>}
+      {status === 'error' && <p className="state-message">Não foi possível carregar agora. Tente novamente.</p>}
       <div ref={sentinelRef} />
       <Outlet />
     </div>
