@@ -319,8 +319,48 @@
   footer.ds { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border-soft); color: var(--text-muted); font-size: 0.8125rem; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   footer.ds code { color: var(--accent-strong); }
 
+  /* ===== Iconografia ===== */
+  .ico { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .ico.fill { fill: currentColor; stroke: none; }
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .icon-tile { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-elevated); padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+  .icon-tile .ico { width: 24px; height: 24px; }
+  .icon-tile .k { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-strong); }
+  .icon-tile .u { font-size: 0.75rem; color: var(--text-muted); }
+  .icon-sizes { display: flex; align-items: flex-end; gap: 28px; flex-wrap: wrap; }
+  .icon-sizes > div { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .icon-sizes span { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted); }
+  .btn-ico { gap: 8px; }
+
+  /* ===== Imagem ===== */
+  .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .img-grid .tile .demo { height: auto; padding: 4px 0; }
+  .frame { position: relative; width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-elevated-2); }
+  .frame .art { position: absolute; inset: 0; background: radial-gradient(120% 90% at 30% 10%, #b5641e 0%, #5a3418 40%, #1b212d 100%); }
+  .frame .crop { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--accent-strong); border-bottom: 1px dashed var(--accent-strong); background: rgba(232,163,61,.08); }
+  .frame .lbl { position: absolute; left: 8px; bottom: 6px; font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text); text-shadow: 0 1px 4px rgba(0,0,0,.7); }
+  .frame .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,14,20,.15) 0%, rgba(11,14,20,.55) 55%, var(--bg) 100%), linear-gradient(90deg, rgba(11,14,20,.85) 0%, rgba(11,14,20,.1) 55%); }
+
+  /* ===== Faça / evite ===== */
+  .dd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+  .ex { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-elevated); overflow: hidden; display: flex; flex-direction: column; }
+  .ex .stage { padding: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; background: var(--bg); border-bottom: 1px solid var(--border-soft); }
+  .ex .cap { padding: 10px 14px 12px; font-size: 0.8125rem; color: var(--text-muted); display: flex; gap: 10px; align-items: flex-start; }
+  .ex .cap b { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; flex-shrink: 0; padding-top: 2px; }
+  .ex.do { border-top: 2px solid var(--accent); } .ex.do .cap b { color: var(--accent-strong); }
+  .ex.dont { border-top: 2px solid var(--danger); } .ex.dont .cap b { color: var(--danger); }
+  .fake-poster { width: 96px; aspect-ratio: 2/3; border-radius: 6px; background: radial-gradient(90% 70% at 70% 90%, #2b4a6e 0%, #172538 50%, #0f1118 100%); border: 1px solid var(--border); }
+  .fake-poster.wide { aspect-ratio: 16/9; width: 150px; }
+  .lbl-mono { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+  .lbl-wrong { font-family: var(--font-body); font-size: 0.8125rem; text-transform: uppercase; font-weight: 700; color: var(--text); }
+
+  /* ===== Voz ===== */
+  .voice { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .voice .tile q { font-style: normal; color: var(--text); quotes: '\201C' '\201D'; }
+  .voice .tile .bad { color: var(--danger); text-decoration: line-through; text-decoration-color: rgba(226,104,90,.6); }
+
   @media (max-width: 860px) {
-    .intro, section.ds > header, .faces, .two { grid-template-columns: 1fr; }
+    .intro, section.ds > header, .faces, .two, .dd { grid-template-columns: 1fr; }
     .scale .row { grid-template-columns: 110px minmax(0,1fr); }
     .scale .row .u { grid-column: 2; }
   }
@@ -334,16 +374,21 @@
 
 <header class="ds-top">
   <a class="brand" href="#top">PauloFlix</a>
-  <span class="meta">design system <b>v1.0</b> · fonte: <b>theme.css</b></span>
+  <span class="meta">design system <b>v1.1</b> · fonte: <b>theme.css</b></span>
   <nav aria-label="Seções">
     <a href="#principios">Princípios</a>
     <a href="#cor">Cor</a>
     <a href="#tipografia">Tipografia</a>
     <a href="#espaco">Espaço</a>
     <a href="#movimento">Movimento</a>
+    <a href="#iconografia">Ícones</a>
+    <a href="#imagem">Imagem</a>
     <a href="#componentes">Componentes</a>
     <a href="#layout">Layout</a>
+    <a href="#uso">Faça e evite</a>
+    <a href="#voz">Voz</a>
     <a href="#tokens">Tokens</a>
+    <a href="#versoes">Versões</a>
   </nav>
 </header>
 
@@ -541,6 +586,99 @@
       <div class="tile"><div class="demo"><div class="m-rise"></div></div><span class="k">600 ms · ease · hero-rise</span><span class="u">Eyebrow, título, sinopse e CTA do hero sobem 14px em cascata com atraso de 60ms entre eles.</span></div>
       <div class="tile"><div class="demo"><div class="m-shimmer"></div></div><span class="k">1,6 s · ease-in-out · shimmer</span><span class="u">Brilho diagonal atravessando pôster e linhas do skeleton, em loop.</span></div>
       <div class="tile"><div class="demo"><span class="mono">scroll-snap: x proximity</span></div><span class="k">Carrossel</span><span class="u">Rolagem suave com encaixe por proximidade; setas só em <code>(hover: hover) and (pointer: fine)</code>.</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== ICONOGRAFIA ===================== -->
+  <section class="ds" id="iconografia">
+    <header>
+      <h2>Iconografia</h2>
+      <p>Hoje o produto desenha a lupa em CSS e usa caracteres para setas, fechar e estrela. Este conjunto formaliza esses sinais como SVG inline, com a mesma geometria e cor herdada, para que novos ícones sigam o mesmo traço.</p>
+    </header>
+
+    <p class="sub">Conjunto</p>
+    <div class="icons">
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><span class="k">search</span><span class="u">busca na nav</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="k">close</span><span class="u">fechar modal, limpar busca</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span class="k">chevron-left</span><span class="u">carrossel anterior</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="k">chevron-right</span><span class="u">carrossel próximo</span></div>
+      <div class="icon-tile"><svg class="ico fill" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--accent-strong)"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.3l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z"/></svg><span class="k">star</span><span class="u">nota, sempre âmbar</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span class="k">plus</span><span class="u">adicionar à lista</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span class="k">check</span><span class="u">adicionado, e-mail confirmado</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg><span class="k">minus</span><span class="u">remover da lista</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg><span class="k">user</span><span class="u">conta, nome</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M4 7l8 6 8-6"/></svg><span class="k">mail</span><span class="u">e-mail, ativação</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><span class="k">lock</span><span class="u">senha</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg><span class="k">eye</span><span class="u">mostrar senha</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--danger)"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.5" r=".6" fill="currentColor"/></svg><span class="k">alert</span><span class="u">erro, link expirado</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 13v6H5V6h6"/></svg><span class="k">external</span><span class="u">abrir no streaming</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="k">menu</span><span class="u">reservado para nav móvel</span></div>
+      <div class="icon-tile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M7 10l5 5 5-5M4 20h16"/></svg><span class="k">arrow-down</span><span class="u">ordenação, rolar</span></div>
+    </div>
+
+    <p class="sub">Tamanhos e uso</p>
+    <div class="demo-area">
+      <div class="icon-sizes">
+        <div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><span>16 · chips e meta</span></div>
+        <div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><span>20 · botões e campos</span></div>
+        <div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:24px;height:24px"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><span>24 · botões só de ícone</span></div>
+      </div>
+      <div class="field"><span class="label">ícone em botão</span><button type="button" class="btn-ico"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Adicionar à minha lista</button></div>
+      <div class="field"><span class="label">ícone em chip</span><span class="cast-chip" style="display:inline-flex;align-items:center;gap:6px"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px"><path d="M14 4h6v6M20 4l-9 9M18 13v6H5V6h6"/></svg>Netflix</span></div>
+    </div>
+    <div class="spec">
+      <span><b>Traço</b> 1,75px, pontas e junções arredondadas, grade de 24 com 2px de respiro</span>
+      <span><b>Cor</b> sempre <code>currentColor</code>; o ícone herda do texto ao lado e nunca define cor própria, exceto a estrela (âmbar) e o alerta (vermelho)</span>
+      <span><b>Preenchimento</b> só a estrela é sólida; todo o resto é contorno</span>
+      <span><b>Gap</b> 8px entre ícone e rótulo em botões, 6px em chips</span>
+      <span><b>Acessibilidade</b> <code>aria-hidden</code> quando há rótulo visível; <code>aria-label</code> no botão quando o ícone está sozinho</span>
+      <span><b>Migração</b> a lupa em CSS e os caracteres ‹ › × ★ atuais são equivalentes visuais aceitos até serem trocados</span>
+    </div>
+  </section>
+
+  <!-- ===================== IMAGEM ===================== -->
+  <section class="ds" id="imagem">
+    <header>
+      <h2>Imagem</h2>
+      <p>Todas as imagens vêm da TMDB em dois tamanhos fixos, definidos na API. A interface nunca redimensiona para cima; ela recorta com <code>object-fit: cover</code> e cobre com véus quando há texto por cima.</p>
+    </header>
+    <div class="img-grid">
+      <div class="tile">
+        <div class="demo"><div class="frame" style="aspect-ratio:2/3;max-width:120px"><div class="art"></div><span class="lbl">w342 · 2:3</span></div></div>
+        <span class="k">Pôster</span>
+        <span class="u">Origem <code>image.tmdb.org/t/p/w342</code> (342 × 513). Exibido a 160px no desktop e 132px no celular, o que dá cerca de 2× de densidade. Proporção 2:3 sempre, inclusive no placeholder.</span>
+      </div>
+      <div class="tile">
+        <div class="demo"><div class="frame" style="aspect-ratio:16/9"><div class="art"></div><div class="veil"></div><span class="lbl">w1280 · center 22%</span></div></div>
+        <span class="k">Backdrop no hero</span>
+        <span class="u">Origem <code>w1280</code> (1280 × 720). Preenche <code>min-height: 68vh</code> com <code>cover</code>, ancorado em <code>center 22%</code> para preservar rostos na parte alta. Véu duplo obrigatório: vertical até <code>--bg</code> e horizontal a partir da esquerda.</span>
+      </div>
+      <div class="tile">
+        <div class="demo"><div class="frame" style="aspect-ratio:16/9"><div class="art"></div><div class="crop" style="top:6.25%;bottom:6.25%"></div><span class="lbl">16:9 → 16:7 centrado</span></div></div>
+        <span class="k">Backdrop no modal</span>
+        <span class="u">A mesma imagem <code>w1280</code> recortada para 16:7, cortando 6,25% em cima e embaixo. Sem véu: o título fica abaixo, em <code>--bg-elevated</code>. Cantos superiores no raio do modal (16px).</span>
+      </div>
+      <div class="tile">
+        <div class="demo"><div class="frame" style="aspect-ratio:2/3;max-width:120px;display:flex;align-items:center;justify-content:center;font-size:.8125rem;color:var(--text-muted)">Sem pôster</div></div>
+        <span class="k">Sem imagem</span>
+        <span class="u">Pôster ausente vira uma caixa <code>--bg-elevated-2</code> com o texto "Sem pôster" (ou o título) centrado em 14px muted. Backdrop ausente no hero usa só o gradiente do véu. Nunca use imagem genérica de substituição.</span>
+      </div>
+      <div class="tile">
+        <div class="demo"><div class="frame" style="aspect-ratio:2/3;max-width:120px;background:var(--bg-elevated-2)"></div></div>
+        <span class="k">Carregando</span>
+        <span class="u">Todo <code>&lt;img&gt;</code> tem <code>background: --bg-elevated-2</code> para não piscar em branco. Em listas, o skeleton com shimmer ocupa a mesma geometria.</span>
+      </div>
+      <div class="tile">
+        <div class="demo"><div class="frame" style="aspect-ratio:2/3;max-width:36px;min-height:54px"><div class="art"></div></div></div>
+        <span class="k">Miniatura na busca</span>
+        <span class="u">Mesmo <code>w342</code> exibido a 36px de largura com raio 4px. Não existe tamanho menor na API; o navegador reduz.</span>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Texto sobre foto</b> só no hero, e só com o véu duplo. Em qualquer outro lugar, texto fica em superfície sólida</span>
+      <span><b>Foco</b> um card com foto é um link; o anel de foco e a sombra âmbar são o único realce, sem escurecer a imagem</span>
+      <span><b>Logos de streaming</b> não são usados; provedores aparecem como texto em chip, com o nome da configuração</span>
+      <span><b>Alt</b> pôster e backdrop recebem o título do filme; miniaturas decorativas na busca recebem <code>alt=""</code></span>
     </div>
   </section>
 
@@ -777,6 +915,99 @@
     </div>
   </section>
 
+  <!-- ===================== FAÇA E EVITE ===================== -->
+  <section class="ds" id="uso">
+    <header>
+      <h2>Faça e evite</h2>
+      <p>Os erros mais prováveis ao estender a interface, lado a lado com a forma correta. Cada par nasce de uma regra das fundações.</p>
+    </header>
+
+    <div class="dd">
+      <div class="ex do"><div class="stage"><button type="button">Adicionar à minha lista</button><button type="button" class="link-button">Já tem conta? Entrar</button></div><div class="cap"><b>Faça</b><span>Um botão âmbar por bloco. A ação secundária vira link ou botão fantasma.</span></div></div>
+      <div class="ex dont"><div class="stage"><button type="button">Adicionar</button><button type="button">Compartilhar</button><button type="button">Avaliar</button></div><div class="cap"><b>Evite</b><span>Vários botões âmbar juntos. O acento deixa de indicar a ação principal.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage"><span class="lbl-mono">Elenco</span><span class="lbl-mono">Em alta agora</span></div><div class="cap"><b>Faça</b><span>Rótulos de seção em JetBrains Mono, caixa alta, tracking 0,08 a 0,12em, cor suave.</span></div></div>
+      <div class="ex dont"><div class="stage"><span class="lbl-wrong">Elenco</span><span class="lbl-wrong">Em alta agora</span></div><div class="cap"><b>Evite</b><span>Inter em caixa alta e negrito. Perde o papel de etiqueta e compete com os títulos.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage"><span style="font-family:var(--font-display);font-size:1.25rem;font-weight:600">Em alta na Netflix</span><button type="button" class="nav-btn">Ver todos</button></div><div class="cap"><b>Faça</b><span>Fraunces só em títulos e na marca. Botões, campos e chips ficam em Inter.</span></div></div>
+      <div class="ex dont"><div class="stage"><button type="button" style="font-family:var(--font-display);font-size:1rem">Ver detalhes</button><span class="cast-chip" style="font-family:var(--font-display)">Pedro Pascal</span></div><div class="cap"><b>Evite</b><span>Fraunces em controles. A serifa de letreiro não foi desenhada para 13 a 15px.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage"><div class="fake-poster"></div></div><div class="cap"><b>Faça</b><span>Pôster em 2:3, com raio herdado do card. Sem imagem, placeholder na mesma proporção.</span></div></div>
+      <div class="ex dont"><div class="stage"><div class="fake-poster wide"></div></div><div class="cap"><b>Evite</b><span>Backdrop 16:9 no lugar do pôster. Quebra o ritmo do carrossel e da grade.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage"><button type="button">Criar conta</button></div><div class="cap"><b>Faça</b><span>Texto sobre âmbar sempre em <code>--accent-ink</code>. Contraste 8,6:1.</span></div></div>
+      <div class="ex dont"><div class="stage"><button type="button" style="color:var(--text-muted)">Criar conta</button><button type="button" style="color:#fff">Criar conta</button></div><div class="cap"><b>Evite</b><span>Texto suave ou branco sobre âmbar. Cai para 2,3:1 e 1,9:1, abaixo do AA.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage"><span class="badge">Drama</span><span class="badge">Romance</span><span class="provider-filter-item active" style="cursor:default">Netflix</span></div><div class="cap"><b>Faça</b><span>Chip preenchido de âmbar só quando representa seleção ativa. Gênero e elenco ficam só com borda.</span></div></div>
+      <div class="ex dont"><div class="stage"><span class="badge" style="background:var(--accent);color:var(--accent-ink);border-color:var(--accent)">Drama</span><span class="badge" style="background:var(--accent);color:var(--accent-ink);border-color:var(--accent)">Romance</span></div><div class="cap"><b>Evite</b><span>Gêneros preenchidos. Parecem filtros ativos e o usuário tenta clicar.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage" style="padding:0"><div class="frame" style="aspect-ratio:16/6;border:0;border-radius:0"><div class="art"></div><div class="veil"></div><span class="lbl" style="font-family:var(--font-display);font-size:1.25rem;bottom:14px;left:16px">Robô Selvagem</span></div></div><div class="cap"><b>Faça</b><span>Título sobre foto só com o véu duplo do hero. O canto inferior esquerdo é sempre legível.</span></div></div>
+      <div class="ex dont"><div class="stage" style="padding:0"><div class="frame" style="aspect-ratio:16/6;border:0;border-radius:0"><div class="art"></div><span class="lbl" style="font-family:var(--font-display);font-size:1.25rem;bottom:14px;left:16px">Robô Selvagem</span></div></div><div class="cap"><b>Evite</b><span>Texto direto sobre a imagem. Em backdrops claros o título some.</span></div></div>
+    </div>
+    <div class="dd">
+      <div class="ex do"><div class="stage"><div style="width:220px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-elevated);padding:14px"><div style="font-size:.875rem;font-weight:600;margin-bottom:6px">Minha lista</div><div style="display:flex;gap:8px"><div class="fake-poster" style="width:48px"></div><div class="fake-poster" style="width:48px"></div></div></div></div><div class="cap"><b>Faça</b><span>Um nível de elevação por vez. Conteúdo dentro de um card fica em superfície plana.</span></div></div>
+      <div class="ex dont"><div class="stage"><div style="width:220px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-elevated);padding:14px"><div style="font-size:.875rem;font-weight:600;margin-bottom:6px">Minha lista</div><div style="border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-elevated-2);padding:10px;box-shadow:0 20px 40px -12px rgba(0,0,0,.55)"><div style="display:flex;gap:8px"><div class="fake-poster" style="width:48px;box-shadow:0 4px 10px rgba(0,0,0,.4)"></div><div class="fake-poster" style="width:48px;box-shadow:0 4px 10px rgba(0,0,0,.4)"></div></div></div></div></div><div class="cap"><b>Evite</b><span>Card dentro de card com sombra em cada nível. A hierarquia some.</span></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== VOZ E TEXTO ===================== -->
+  <section class="ds" id="voz">
+    <header>
+      <h2>Voz e texto</h2>
+      <p>Português do Brasil, direto e sem exclamação. A interface fala com "você", nomeia as coisas como o usuário as reconhece e, quando algo falha, diz o que aconteceu e o que fazer.</p>
+    </header>
+
+    <p class="sub">Regras</p>
+    <div class="voice">
+      <div class="tile"><span class="k">Botões no imperativo</span><span class="u">Verbo no infinitivo ou substantivo curto, primeira letra maiúscula, sem ponto. <q>Ver detalhes</q>, <q>Criar conta</q>, <q>Enviar link</q>, <q>Remover</q>, <q>Sair</q>.</span></div>
+      <div class="tile"><span class="k">Carregando: gerúndio e reticências</span><span class="u">O botão troca o rótulo pelo verbo em andamento com três pontos. <q>Entrando...</q>, <q>Enviando...</q>, <q>Adicionando...</q>, <q>Buscando...</q>, <q>Carregando...</q>.</span></div>
+      <div class="tile"><span class="k">Erro: o que houve e o que fazer</span><span class="u">Sem "Ops" nem pedido de desculpas. <q>Não foi possível enviar agora. Tente novamente em alguns instantes.</q> <q>E-mail ou senha inválidos.</q></span></div>
+      <div class="tile"><span class="k">Estados vazios convidam</span><span class="u">Título curto em Fraunces e uma frase que aponta o próximo passo. <q>Sua lista está vazia</q> + <q>Adicione filmes a partir da busca ou dos streamings para vê-los aqui.</q></span></div>
+      <div class="tile"><span class="k">Caixa alta só no mono</span><span class="u">Eyebrow e rótulos de seção em JetBrains Mono são os únicos textos em maiúsculas. Títulos e botões usam caixa de frase.</span></div>
+      <div class="tile"><span class="k">Acentos sempre</span><span class="u">O código hoje mistura <span class="bad">Nao foi possivel</span> com <q>Não foi possível</q>, e <span class="bad">Minha Lista</span> com <q>Minha lista</q>. A regra é acentuar e usar caixa de frase; as ocorrências sem acento estão espalhadas por 11 arquivos de páginas e componentes.</span></div>
+    </div>
+
+    <p class="sub">Vocabulário fixo</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Termo</th><th>Use</th><th>Não use</th></tr></thead>
+        <tbody>
+          <tr><td>Lista pessoal</td><td>Minha lista</td><td class="mono">Favoritos · Watchlist · Minha Lista</td></tr>
+          <tr><td>Entrar na conta</td><td>Entrar</td><td class="mono">Login · Fazer login · Logar</td></tr>
+          <tr><td>Registrar-se</td><td>Criar conta</td><td class="mono">Cadastrar · Sign up · Registrar</td></tr>
+          <tr><td>Encerrar sessão</td><td>Sair</td><td class="mono">Logout · Deslogar</td></tr>
+          <tr><td>Serviço de vídeo</td><td>streaming</td><td class="mono">provedor · plataforma · provider</td></tr>
+          <tr><td>Nomes dos serviços</td><td>Netflix · Prime Video · Disney+ · Max · Globoplay · Apple TV+ · Paramount+</td><td class="mono">Amazon Prime · HBO Max · Disney Plus</td></tr>
+          <tr><td>Abrir detalhes</td><td>Ver detalhes</td><td class="mono">Saiba mais · Mais informações</td></tr>
+          <tr><td>Endereço eletrônico</td><td>e-mail</td><td class="mono">email · E-Mail · correio</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sub">Formatos</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Dado</th><th>Formato</th><th>Exemplo</th><th>Fonte</th></tr></thead>
+        <tbody>
+          <tr><td>Ano</td><td>quatro dígitos, sem "de"</td><td class="num">2024</td><td class="mono">mono</td></tr>
+          <tr><td>Duração</td><td>minutos inteiros + "min"</td><td class="num">161 min</td><td class="mono">mono</td></tr>
+          <tr><td>Nota</td><td>★ + uma casa decimal com ponto</td><td class="num">★ 7.4</td><td class="mono">mono, âmbar</td></tr>
+          <tr><td>Separador de metadados</td><td>ponto mediano com espaços</td><td class="num">2024 · 102 min</td><td class="mono">mono</td></tr>
+          <tr><td>E-mail do usuário</td><td>minúsculas, sem truncar</td><td class="num">paulo@exemplo.com</td><td class="mono">mono, 13px</td></tr>
+          <tr><td>Elenco</td><td>Nome + "como" + personagem</td><td>Pedro Pascal <span class="mono">como Fink</span></td><td class="mono">corpo + muted</td></tr>
+          <tr><td>Título de carrossel</td><td>"Em alta na" + nome do streaming</td><td>Em alta na Netflix</td><td class="mono">display</td></tr>
+          <tr><td>Atalhos</td><td>símbolo + verbo, separados por ·</td><td class="num">↑↓ navegar · ↵ abrir · esc fechar</td><td class="mono">mono, 11px</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- ===================== TOKENS ===================== -->
   <section class="ds" id="tokens">
     <header>
@@ -811,11 +1042,100 @@
 
   color-scheme: dark;
 }</pre>
-    <p class="note" style="margin-top:14px">Valores que aparecem em componentes mas ainda não são tokens, candidatos a promoção: borda âmbar do eyebrow e do card em hover (<code>rgba(232,163,61,.35)</code> e <code>.5</code>), vidro da nav (<code>rgba(11,14,20,.72)</code>), sombras do card e do dropdown, durações 150/200/250ms.</p>
+    <p class="sub">Tokens estendidos · proposta v1.1</p>
+    <p class="note" style="margin-bottom:12px">Valores que já existem espalhados pelos componentes, nomeados para virar variáveis. Ainda não estão em <code>theme.css</code>; ao aplicar, substitua os literais pelos tokens e mantenha os valores.</p>
+<pre><span class="c">/* Espaço: gap entre irmãos e ritmo vertical entre blocos */</span>
+--gap-xs: 6px;    <span class="c">/* dentro de itens (título/meta, marca/ponto) */</span>
+--gap-sm: 8px;    <span class="c">/* chips, badges, elenco, skeleton */</span>
+--gap-md: 10px;   <span class="c">/* nav, meta do modal, item de busca */</span>
+--gap-lg: 14px;   <span class="c">/* carrossel, formulário, cabeçalho de seção */</span>
+--gap-xl: 18px;   <span class="c">/* grade de filmes */</span>
+--gap-2xl: 20px;  <span class="c">/* links da nav */</span>
+--stack-sm: 20px; <span class="c">/* grade: acima */</span>
+--stack-md: 28px; <span class="c">/* carrossel e título de página: acima */</span>
+--stack-lg: 48px; <span class="c">/* grade: abaixo */</span>
+--stack-xl: 56px; <span class="c">/* hero: abaixo do conteúdo */</span>
+--stack-2xl: 64px;<span class="c">/* estado vazio */</span>
+--stack-3xl: 72px;<span class="c">/* formulário: margem vertical */</span>
+
+<span class="c">/* Bordas de acento e de erro com opacidade */</span>
+--accent-border: rgba(232, 163, 61, 0.35);   <span class="c">/* eyebrow */</span>
+--accent-border-strong: rgba(232, 163, 61, 0.5); <span class="c">/* card em hover */</span>
+--danger-border: rgba(226, 104, 90, 0.35);   <span class="c">/* caixa de erro */</span>
+
+<span class="c">/* Vidro e overlay */</span>
+--glass-nav: rgba(11, 14, 20, 0.72);     <span class="c">/* + blur(14px) */</span>
+--glass-arrow: rgba(18, 22, 31, 0.85);   <span class="c">/* + blur(6px) */</span>
+--glass-close: rgba(11, 14, 20, 0.6);
+--overlay: rgba(6, 8, 12, 0.72);         <span class="c">/* + blur(4px) */</span>
+
+<span class="c">/* Elevação */</span>
+--shadow-card-hover: 0 14px 28px -12px rgba(232, 163, 61, 0.35), 0 4px 10px rgba(0, 0, 0, 0.4);
+--shadow-dropdown: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
+--ring-focus: 0 0 0 3px var(--accent-soft);
+
+<span class="c">/* Movimento */</span>
+--dur-fast: 150ms;   <span class="c">/* cor, borda, botão */</span>
+--dur-base: 200ms;   <span class="c">/* card */</span>
+--dur-modal: 250ms;
+--dur-hero: 600ms;
+--dur-shimmer: 1.6s;
+--ease: ease;
+--ease-shimmer: ease-in-out;
+
+<span class="c">/* Camadas */</span>
+--z-arrow: 2;
+--z-nav: 20;
+--z-modal: 100;
+
+<span class="c">/* Ícones */</span>
+--icon-sm: 16px;
+--icon-md: 20px;
+--icon-lg: 24px;
+--icon-stroke: 1.75;
+
+<span class="c">/* Larguras fixas */</span>
+--card-w: 160px;
+--card-w-mobile: 132px;
+--search-max-w: 460px;
+--modal-max-w: 720px;
+--form-max-w: 380px;</pre>
+  </section>
+
+  <!-- ===================== VERSÕES ===================== -->
+  <section class="ds" id="versoes">
+    <header>
+      <h2>Versões</h2>
+      <p>O sistema segue versionamento semântico. Mudança de valor em token existente ou componente novo sobe a versão menor; remoção ou renomeação de token sobe a maior; correção de texto ou exemplo sobe a de correção.</p>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Versão</th><th>Data</th><th>Mudanças</th><th>Estado em theme.css</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">1.1.0</td><td class="num">2026-09-15</td>
+            <td>Iconografia com 16 ícones SVG e regras de traço. Regras de imagem para pôster, backdrop e estados sem imagem. Oito pares de faça e evite. Voz e texto com vocabulário fixo e formatos. Tokens estendidos de espaço, borda, vidro, sombra, movimento, camadas, ícones e larguras.</td>
+            <td>Tokens estendidos e ícones SVG são proposta; o restante documenta o que já existe</td>
+          </tr>
+          <tr>
+            <td class="num">1.0.0</td><td class="num">2026-09-15</td>
+            <td>Documento inicial extraído do site em produção e de <code>src/styles/theme.css</code>: princípios, 13 tokens de cor com contraste medido, três famílias tipográficas e escala, espaço, raio, elevação, movimento, componentes com estados, layout e acessibilidade.</td>
+            <td>Idêntico</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">Como mudar</p>
+    <div class="tiles">
+      <div class="tile"><span class="k">1 · Mude o token, não o componente</span><span class="u">Se um card precisa de outra cor de borda, a pergunta é se a borda de todos os cards deveria mudar. Se sim, altere o token. Se não, é um estado novo e ganha nome.</span></div>
+      <div class="tile"><span class="k">2 · theme.css primeiro</span><span class="u">O documento descreve o produto, não o contrário. Toda alteração entra em <code>theme.css</code>, sobe em produção e depois é registrada aqui com a versão.</span></div>
+      <div class="tile"><span class="k">3 · Meça o contraste</span><span class="u">Qualquer par novo de texto e fundo entra na tabela da seção Cor com a razão calculada. Abaixo de 4,5:1 não sobe.</span></div>
+      <div class="tile"><span class="k">4 · Um exemplo por estado</span><span class="u">Componente novo só entra com padrão, hover, foco, desabilitado e, quando houver, carregando, vazio e erro, renderizados com o CSS real.</span></div>
+    </div>
   </section>
 
   <footer class="ds">
-    <span>PauloFlix · Design System v1.0 · setembro de 2026</span>
+    <span>PauloFlix · Design System v1.1.0 · setembro de 2026</span>
     <span>Fonte de verdade: <code>src/styles/theme.css</code> no repositório PauloFlix</span>
   </footer>
 </main>
