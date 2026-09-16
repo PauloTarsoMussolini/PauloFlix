@@ -1,0 +1,821 @@
+<title>PauloFlix Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* ===== Tokens (espelho fiel de src/styles/theme.css) ===== */
+  :root {
+    --bg: #0b0e14;
+    --bg-elevated: #12161f;
+    --bg-elevated-2: #1b212d;
+    --border: #262d3b;
+    --border-soft: #1d232f;
+    --text: #edebe4;
+    --text-muted: #8c93a6;
+    --accent: #e8a33d;
+    --accent-strong: #f2b45a;
+    --accent-ink: #1a1206;
+    --accent-soft: rgba(232, 163, 61, 0.14);
+    --danger: #e2685a;
+    --danger-soft: rgba(226, 104, 90, 0.12);
+    --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --font-body: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --container-pad: clamp(16px, 4vw, 48px);
+    color-scheme: dark;
+  }
+
+  /* O produto é dark-only (color-scheme: dark no app). O guia segue a mesma decisão. */
+  * { box-sizing: border-box; }
+  html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; color: var(--text); text-wrap: balance; }
+  p { margin: 0; }
+  a { color: inherit; }
+  code { font-family: var(--font-mono); font-size: 0.8125em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+  /* ===== Estrutura do guia ===== */
+  .ds-top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap; row-gap: 8px;
+    padding: 14px var(--container-pad);
+    background: rgba(11, 14, 20, 0.72);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .brand {
+    display: inline-flex; align-items: baseline; gap: 6px; text-decoration: none; color: var(--text);
+    font-family: var(--font-display); font-weight: 600; font-size: 1.375rem; letter-spacing: -0.01em;
+  }
+  .brand::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); align-self: center; }
+  .ds-top .meta { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.02em; }
+  .ds-top .meta b { color: var(--accent-strong); font-weight: 500; }
+  .ds-top nav { margin-left: auto; display: flex; gap: 14px; flex-wrap: wrap; }
+  .ds-top nav a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color .15s ease; }
+  .ds-top nav a:hover { color: var(--text); }
+
+  .wrap { padding: 0 var(--container-pad) 96px; max-width: 1180px; margin: 0 auto; }
+
+  .intro { padding: 56px 0 40px; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 40px; align-items: end; border-bottom: 1px solid var(--border-soft); }
+  .intro h1 { font-size: clamp(2.25rem, 4.6vw, 3.75rem); line-height: 1.05; letter-spacing: -0.01em; margin: 14px 0; }
+  .intro p { color: var(--text-muted); font-size: 1.0625rem; max-width: 60ch; }
+  .eyebrow {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-strong); background: var(--accent-soft); border: 1px solid rgba(232,163,61,.35); border-radius: 999px; padding: 4px 12px;
+  }
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; font-size: 0.875rem; }
+  .facts dt { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .facts dd { margin: 2px 0 0; }
+  .facts dl { margin: 0; display: contents; }
+
+  section.ds { padding: 56px 0 8px; }
+  section.ds > header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 24px; align-items: end; margin-bottom: 28px; }
+  section.ds > header h2 { font-size: 1.75rem; }
+  section.ds > header p { color: var(--text-muted); max-width: 62ch; }
+  .sub { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; margin: 32px 0 12px; }
+  .note { color: var(--text-muted); font-size: 0.875rem; max-width: 70ch; }
+  .note + .note { margin-top: 6px; }
+
+  /* Amostras de cor */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .swatch { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--bg-elevated); }
+  .swatch .chip { height: 72px; border-bottom: 1px solid var(--border-soft); }
+  .swatch .chip.checker { background-image: linear-gradient(45deg, var(--bg-elevated-2) 25%, transparent 25%, transparent 75%, var(--bg-elevated-2) 75%), linear-gradient(45deg, var(--bg-elevated-2) 25%, transparent 25%, transparent 75%, var(--bg-elevated-2) 75%); background-size: 16px 16px; background-position: 0 0, 8px 8px; position: relative; }
+  .swatch .chip.checker::after { content: ''; position: absolute; inset: 0; background: var(--sw); }
+  .swatch .info { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .swatch .name { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--accent-strong); }
+  .swatch .hex { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+  .swatch .role { font-size: 0.8125rem; color: var(--text); margin-top: 4px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-elevated); }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+  tr:last-child td { border-bottom: 0; }
+  td.mono, .mono { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  td.num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 0.8125rem; }
+  .pass { color: var(--accent-strong); font-family: var(--font-mono); font-size: 0.75rem; }
+  .pass::before { content: '\2605'; font-size: 0.7rem; margin-right: 3px; }
+
+  /* Tipografia */
+  .faces { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .face { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-elevated); padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .face .sample { font-size: 2.5rem; line-height: 1.05; overflow-wrap: anywhere; }
+  .face.display .sample { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
+  .face.body .sample { font-family: var(--font-body); font-weight: 400; font-size: 2rem; }
+  .face.mono .sample { font-family: var(--font-mono); font-size: 1.5rem; color: var(--accent-strong); letter-spacing: 0.04em; text-transform: uppercase; }
+  .face .fname { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-strong); }
+  .face .fuse { font-size: 0.875rem; color: var(--text-muted); }
+  .scale { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-elevated); overflow: hidden; }
+  .scale .row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 180px; gap: 16px; align-items: baseline; padding: 12px 16px; border-bottom: 1px solid var(--border-soft); }
+  .scale .row:last-child { border-bottom: 0; }
+  .scale .k { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .scale .v { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .scale .u { font-size: 0.8125rem; color: var(--text-muted); }
+
+  /* Espaço / raio / elevação */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .tile { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-elevated); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .tile .demo { height: 64px; display: flex; align-items: center; justify-content: center; }
+  .tile .demo .box { width: 64px; height: 48px; background: var(--bg-elevated-2); border: 1px solid var(--border); }
+  .tile .k { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--accent-strong); }
+  .tile .u { font-size: 0.8125rem; color: var(--text-muted); }
+  .tile .demo .shadow { width: 90px; height: 48px; border-radius: var(--radius-md); background: var(--bg-elevated); border: 1px solid var(--border); }
+  .gaps { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; padding: 6px 0; }
+  .gap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .gap i { display: block; background: var(--accent); border-radius: 2px; }
+  .gap span { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted); }
+
+  /* Movimento */
+  .motion { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .motion .tile .demo { justify-content: flex-start; gap: 12px; }
+  .m-rise { width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent); }
+  .m-modal { width: 70px; height: 46px; border-radius: var(--radius-md); background: var(--bg-elevated-2); border: 1px solid var(--border); }
+  .m-card { width: 34px; height: 48px; border-radius: 6px; background: var(--bg-elevated-2); border: 1px solid var(--border); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .m-card:hover { transform: translateY(-5px); border-color: rgba(232,163,61,.5); box-shadow: 0 14px 28px -12px rgba(232,163,61,.35), 0 4px 10px rgba(0,0,0,.4); }
+  .m-shimmer { width: 120px; height: 10px; border-radius: 4px; background-image: linear-gradient(100deg, var(--bg-elevated-2) 30%, #262d3b 45%, var(--bg-elevated-2) 60%); background-size: 200% 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .m-rise { animation: hero-rise 0.6s ease backwards infinite alternate; animation-duration: 1.6s; }
+    .m-modal { animation: modal-rise 0.25s ease backwards infinite alternate; animation-duration: 1.4s; }
+    .m-shimmer { animation: shimmer 1.6s ease-in-out infinite; }
+  }
+  @keyframes hero-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes modal-rise { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes shimmer { from { background-position: 120% 0; } to { background-position: -20% 0; } }
+
+  /* Área de demonstração */
+  .demo-area { border: 1px dashed var(--border); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; background: var(--bg); }
+  .demo-area.stack { flex-direction: column; align-items: stretch; }
+  .demo-area.elevated { background: var(--bg-elevated); border-style: solid; }
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .label { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+  .spec { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px 24px; font-size: 0.8125rem; color: var(--text-muted); margin-top: 12px; }
+  .spec b { color: var(--text); font-weight: 500; }
+  .spec code { color: var(--accent-strong); }
+
+  /* ===== Componentes do produto (regras copiadas de theme.css) ===== */
+  button, .btn {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.9375rem; background: var(--accent); color: var(--accent-ink);
+    border: none; cursor: pointer; border-radius: var(--radius-sm); padding: 10px 18px;
+    transition: background-color .15s ease, transform .15s ease, box-shadow .15s ease; text-decoration: none; display: inline-flex; align-items: center;
+  }
+  button:hover:not(:disabled), .btn:hover { background: var(--accent-strong); transform: translateY(-1px); }
+  button:active:not(:disabled) { transform: translateY(0); }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  .is-hover { background: var(--accent-strong); transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); font-size: 0.8125rem; padding: 7px 12px; }
+  .btn-ghost:hover:not(:disabled) { color: var(--danger); border-color: var(--danger); background: transparent; transform: none; }
+  .btn-ghost.is-hover { color: var(--danger); border-color: var(--danger); background: transparent; transform: none; }
+  .link-button { background: none; border: none; padding: 0; color: var(--accent); font-family: var(--font-body); font-size: 0.875rem; font-weight: 400; text-align: left; cursor: pointer; }
+  .link-button:hover:not(:disabled) { text-decoration: underline; background: none; transform: none; }
+  .link-button:disabled { color: var(--text-muted); cursor: default; }
+  .nav-btn { padding: 8px 14px; font-size: 0.875rem; }
+
+  select {
+    font-family: var(--font-body); background: var(--bg-elevated-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.9375rem;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field input {
+    padding: 11px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-elevated-2); color: var(--text);
+    font-family: var(--font-body); font-size: 0.9375rem; transition: border-color .15s ease; width: 100%;
+  }
+  .field input:focus-visible, .field input.is-focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field input::placeholder, .nav-search-input::placeholder { color: var(--text-muted); }
+  .form-hint { color: var(--text-muted); font-size: 0.8125rem; line-height: 1.5; }
+
+  .nav-search { position: relative; flex: 1 1 240px; max-width: 460px; }
+  .nav-search-input-wrap { position: relative; display: flex; align-items: center; }
+  .nav-search-input-wrap::before {
+    content: ''; position: absolute; left: 13px; width: 12px; height: 12px; border: 2px solid var(--text-muted); border-radius: 50%;
+    box-shadow: 8px 8px 0 -6px var(--text-muted); pointer-events: none;
+  }
+  .nav-search-input {
+    width: 100%; padding: 9px 32px 9px 34px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-elevated-2);
+    color: var(--text); font-family: var(--font-body); font-size: 0.875rem;
+  }
+  .nav-search-input:focus-visible { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .nav-search-clear { position: absolute; right: 6px; width: 24px; height: 24px; border-radius: 50%; background: transparent; color: var(--text-muted); border: none; font-size: 1.1rem; line-height: 1; padding: 0; justify-content: center; }
+  .nav-search-clear:hover { background: var(--bg-elevated); color: var(--text); transform: none; }
+  .nav-search-dropdown { position: relative; margin-top: 8px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: 0 20px 40px -12px rgba(0,0,0,.55); padding: 6px; max-width: 460px; }
+  .nav-search-results { list-style: none; margin: 0; padding: 0; }
+  .nav-search-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: var(--radius-sm); background: transparent; color: var(--text); border: none; text-align: left; font-family: var(--font-body); font-weight: 400; font-size: 1rem; cursor: pointer; }
+  .nav-search-item:hover, .nav-search-item.active { background: var(--accent-soft); transform: none; }
+  .nav-search-item-placeholder { width: 36px; aspect-ratio: 2/3; border-radius: 4px; background: var(--bg-elevated-2); flex-shrink: 0; }
+  .nav-search-item-info { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .nav-search-item-title { font-size: 0.875rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-search-item-sub { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+  .nav-search-hint { padding: 8px 10px 4px; border-top: 1px solid var(--border-soft); margin-top: 4px; font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted); letter-spacing: 0.02em; }
+
+  .nav-bar { display: flex; align-items: center; flex-wrap: wrap; row-gap: 10px; gap: 20px; padding: 14px 20px; background: rgba(11,14,20,.72); border: 1px solid var(--border-soft); border-radius: var(--radius-md); width: 100%; }
+  .nav-links { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9375rem; font-weight: 500; transition: color .15s ease; }
+  .nav-links a:hover, .nav-links a.is-hover { color: var(--text); }
+  .nav-user { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8125rem; }
+
+  .hero-eyebrow { display: inline-block; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-strong); background: var(--accent-soft); border: 1px solid rgba(232,163,61,.35); border-radius: 999px; padding: 4px 12px; }
+  .badge { font-size: 0.75rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px; }
+  .provider-badge { background: var(--bg-elevated-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.8125rem; font-weight: 500; }
+  .provider-badge.is-hover { background: var(--accent); color: var(--accent-ink); }
+  .cast-chip { font-size: 0.8125rem; background: var(--bg-elevated-2); border: 1px solid var(--border); border-radius: 999px; padding: 6px 13px; white-space: nowrap; }
+  .cast-chip span { color: var(--text-muted); }
+  .provider-filter { display: flex; gap: 8px; flex-wrap: wrap; }
+  .provider-filter-item { color: var(--text-muted); text-decoration: none; padding: 7px 15px; border-radius: 999px; border: 1px solid var(--border); font-size: 0.875rem; font-weight: 500; transition: color .15s ease, border-color .15s ease, background-color .15s ease; }
+  .provider-filter-item:hover { color: var(--text); border-color: var(--text-muted); }
+  .provider-filter-item.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .rating-badge { display: inline-flex; align-items: center; gap: 3px; color: var(--accent-strong); font-family: var(--font-mono); font-size: 0.75rem; }
+  .rating-badge::before { content: '\2605'; font-size: 0.7rem; }
+
+  .cards-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+  .cards-row > * { flex: 0 0 160px; width: 160px; }
+  .movie-card { display: block; width: 100%; text-decoration: none; color: var(--text); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .movie-card:hover, .movie-card:focus-visible, .movie-card.is-hover { transform: translateY(-5px); border-color: rgba(232,163,61,.5); box-shadow: 0 14px 28px -12px rgba(232,163,61,.35), 0 4px 10px rgba(0,0,0,.4); }
+  .poster { width: 100%; aspect-ratio: 2/3; display: block; background: var(--bg-elevated-2); position: relative; overflow: hidden; }
+  .poster.p1 { background: radial-gradient(120% 90% at 30% 10%, #6b3a1f 0%, #2a1a12 45%, #0f1118 100%); }
+  .poster.p2 { background: radial-gradient(90% 70% at 70% 90%, #2b4a6e 0%, #172538 50%, #0f1118 100%); }
+  .poster.p3 { background: radial-gradient(100% 80% at 50% 50%, #4a3a1e 0%, #1c1a16 60%, #0f1118 100%); }
+  .poster .ptitle { position: absolute; left: 12px; right: 12px; bottom: 14px; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; line-height: 1.05; color: #f5efe2; text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+  .movie-card-placeholder { width: 100%; aspect-ratio: 2/3; background: var(--bg-elevated-2); display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px; font-size: 0.875rem; color: var(--text-muted); }
+  .movie-card-seam { position: relative; height: 1px; margin: 0 10px; background-image: linear-gradient(90deg, var(--border) 60%, transparent 0%); background-size: 8px 1px; background-repeat: repeat-x; transition: background-image .2s ease; }
+  .movie-card:hover .movie-card-seam, .movie-card.is-hover .movie-card-seam { background-image: linear-gradient(90deg, var(--accent) 60%, transparent 0%); }
+  .movie-card-seam::before, .movie-card-seam::after { content: ''; position: absolute; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); }
+  .movie-card-seam::before { left: -16px; } .movie-card-seam::after { right: -16px; }
+  .movie-card-meta { padding: 10px 12px 12px; }
+  .movie-card-title { font-size: 0.875rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+  .movie-card-sub { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+  .skeleton-card { width: 100%; border-radius: var(--radius-md); overflow: hidden; background: var(--bg-elevated); border: 1px solid var(--border-soft); }
+  .skeleton-poster { aspect-ratio: 2/3; background: var(--bg-elevated-2); }
+  .skeleton-lines { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .skeleton-line { height: 8px; border-radius: 4px; background: var(--bg-elevated-2); }
+  .skeleton-line.short { width: 55%; }
+  .skeleton-poster, .skeleton-line { background-image: linear-gradient(100deg, var(--bg-elevated-2) 30%, #262d3b 45%, var(--bg-elevated-2) 60%); background-size: 200% 100%; }
+  @media (prefers-reduced-motion: no-preference) { .skeleton-poster, .skeleton-line { animation: shimmer 1.6s ease-in-out infinite; } }
+  .watchlist-item { display: flex; flex-direction: column; gap: 8px; }
+
+  .carousel-arrow { display: inline-flex; width: 38px; height: 38px; border-radius: 50%; align-items: center; justify-content: center; background: rgba(18,22,31,.85); color: var(--text); border: 1px solid var(--border); font-size: 1.1rem; padding: 0; backdrop-filter: blur(6px); font-weight: 400; }
+  .carousel-arrow:hover:not(:disabled) { background: var(--bg-elevated-2); color: var(--accent-strong); transform: translateY(-1px); }
+  .modal-close { width: 34px; height: 34px; border-radius: 50%; background: rgba(11,14,20,.6); border: 1px solid var(--border); color: var(--text); font-size: 1.25rem; line-height: 1; padding: 0; justify-content: center; font-weight: 400; }
+  .modal-close:hover { background: rgba(11,14,20,.85); color: var(--accent-strong); transform: none; }
+
+  /* Modal em miniatura */
+  .modal-stage { background: rgba(6,8,12,.72); border-radius: var(--radius-lg); padding: 24px; display: flex; justify-content: center; border: 1px solid var(--border-soft); background-image: linear-gradient(180deg, #1a1408 0%, #0b0e14 100%); }
+  .modal-content { background: var(--bg-elevated); border: 1px solid var(--border); max-width: 560px; width: 100%; border-radius: var(--radius-lg); position: relative; overflow: hidden; }
+  .modal-content .modal-close { position: absolute; top: 14px; right: 14px; z-index: 2; }
+  .modal-backdrop { width: 100%; aspect-ratio: 16/7; display: block; background: radial-gradient(120% 100% at 20% 0%, #8a4a1c 0%, #3b2214 40%, #12161f 100%); }
+  .modal-body { padding: 24px 28px 28px; }
+  .modal-body h2 { font-size: 1.625rem; margin-bottom: 8px; }
+  .modal-meta { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 14px; }
+  .modal-meta .rating-badge { font-size: 0.8125rem; }
+  .modal-overview { color: var(--text-muted); margin-bottom: 16px; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+  .modal-providers { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+  .modal-body h3 { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; margin: 24px 0 10px; }
+  .cast-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .cast-row::-webkit-scrollbar { display: none; }
+  .cast-row .cast-chip { flex: 0 0 auto; }
+
+  /* Formulário de autenticação */
+  .auth-form { max-width: 380px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; padding: 36px 32px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+  .auth-form h1 { font-size: 1.75rem; margin-bottom: 4px; }
+  .auth-form .form-hint { margin: -6px 0 0; }
+  .form-link { color: var(--text-muted); font-size: 0.875rem; text-align: center; text-decoration: none; transition: color .15s ease; }
+  .form-link:hover { color: var(--text); }
+  .form-error { color: var(--danger); background: var(--danger-soft); border: 1px solid rgba(226,104,90,.35); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.875rem; }
+  ul.form-error { margin: 0; padding: 8px 12px 8px 28px; }
+  ul.form-error li + li { margin-top: 4px; }
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); width: 100%; }
+  .empty-state h2 { color: var(--text); font-size: 1.25rem; margin-bottom: 8px; }
+  .state-message { padding: 12px 0; color: var(--text-muted); }
+
+  /* Hero em miniatura */
+  .hero-mini { position: relative; min-height: 300px; border-radius: var(--radius-lg); overflow: hidden; display: flex; align-items: flex-end; border: 1px solid var(--border-soft);
+    background: radial-gradient(90% 120% at 80% 20%, #b5641e 0%, #5a3418 35%, #1b212d 75%, #0b0e14 100%); }
+  .hero-mini::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,14,20,.15) 0%, rgba(11,14,20,.55) 55%, var(--bg) 100%), linear-gradient(90deg, rgba(11,14,20,.85) 0%, rgba(11,14,20,.1) 55%); }
+  .hero-mini > div { position: relative; padding: 0 28px 32px; max-width: 520px; }
+  .hero-mini h1 { font-size: clamp(1.75rem, 3.6vw, 2.6rem); line-height: 1.05; letter-spacing: -0.01em; margin: 12px 0 10px; }
+  .hero-mini p { color: var(--text-muted); font-size: 1rem; max-width: 46ch; }
+  .hero-cta { display: inline-flex; margin-top: 18px; text-decoration: none; padding: 11px 22px; border-radius: var(--radius-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; transition: background-color .15s ease, transform .15s ease; }
+  .hero-cta:hover { background: var(--accent-strong); transform: translateY(-1px); }
+
+  /* Bloco de código */
+  pre { margin: 0; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.6; color: var(--text); }
+  pre .c { color: var(--text-muted); } pre .k { color: var(--accent-strong); }
+
+  /* Breakpoints */
+  .bp { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+  footer.ds { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border-soft); color: var(--text-muted); font-size: 0.8125rem; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer.ds code { color: var(--accent-strong); }
+
+  @media (max-width: 860px) {
+    .intro, section.ds > header, .faces, .two { grid-template-columns: 1fr; }
+    .scale .row { grid-template-columns: 110px minmax(0,1fr); }
+    .scale .row .u { grid-column: 2; }
+  }
+  @media (max-width: 640px) {
+    .cards-row > * { flex-basis: 132px; width: 132px; }
+    .facts { grid-template-columns: 1fr; }
+    .modal-body { padding: 18px 18px 22px; }
+    .auth-form { padding: 28px 20px; }
+  }
+</style>
+
+<header class="ds-top">
+  <a class="brand" href="#top">PauloFlix</a>
+  <span class="meta">design system <b>v1.0</b> · fonte: <b>theme.css</b></span>
+  <nav aria-label="Seções">
+    <a href="#principios">Princípios</a>
+    <a href="#cor">Cor</a>
+    <a href="#tipografia">Tipografia</a>
+    <a href="#espaco">Espaço</a>
+    <a href="#movimento">Movimento</a>
+    <a href="#componentes">Componentes</a>
+    <a href="#layout">Layout</a>
+    <a href="#tokens">Tokens</a>
+  </nav>
+</header>
+
+<main class="wrap" id="top">
+  <div class="intro">
+    <div>
+      <span class="eyebrow">Midnight cinema</span>
+      <h1>Design System do PauloFlix</h1>
+      <p>Referência única de cor, tipo, espaço, movimento e componentes da interface de descoberta de filmes. Cada valor aqui é o que está em produção em pauloflix.paulomussolini.net.br, extraído de <code>src/styles/theme.css</code>.</p>
+    </div>
+    <div class="facts">
+      <dl><dt>Tema</dt><dd>Escuro apenas (<code>color-scheme: dark</code>)</dd></dl>
+      <dl><dt>Acento</dt><dd>Âmbar, um só, usado com parcimônia</dd></dl>
+      <dl><dt>Faces</dt><dd>Fraunces · Inter · JetBrains Mono</dd></dl>
+      <dl><dt>Elemento-assinatura</dt><dd>Card de filme em forma de ingresso picotado</dd></dl>
+      <dl><dt>Dados</dt><dd>TMDB, região BR, idioma pt-BR</dd></dl>
+      <dl><dt>Stack</dt><dd>React 19 + Vite, CSS puro com custom properties</dd></dl>
+    </div>
+  </div>
+
+  <!-- ===================== PRINCÍPIOS ===================== -->
+  <section class="ds" id="principios">
+    <header>
+      <h2>Princípios</h2>
+      <p>Quatro decisões que explicam quase toda a interface. Quando um caso novo não estiver coberto por um componente, decida por elas.</p>
+    </header>
+    <div class="tiles">
+      <div class="tile">
+        <span class="k">01 · Sala escura</span>
+        <p class="u">O fundo é um azul-marinho quase preto, não cinza. Superfícies sobem em três degraus discretos; o pôster é sempre o elemento mais claro e colorido da tela.</p>
+      </div>
+      <div class="tile">
+        <span class="k">02 · Um único acento</span>
+        <p class="u">O âmbar marca ação e foco. Não existe segunda cor de destaque; vermelho aparece só como erro. Se o âmbar briga com o fundo, reduza a área, não troque a cor.</p>
+      </div>
+      <div class="tile">
+        <span class="k">03 · Três vozes tipográficas</span>
+        <p class="u">Fraunces fala como letreiro (títulos, marca). Inter conversa (corpo, botões). JetBrains Mono é a etiqueta técnica (ano, duração, nota, rótulos em caixa alta).</p>
+      </div>
+      <div class="tile">
+        <span class="k">04 · Movimento curto e opcional</span>
+        <p class="u">Transições entre 150 e 250 ms, sempre com <code>ease</code>. Toda animação respeita <code>prefers-reduced-motion</code>; setas do carrossel só aparecem com mouse.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COR ===================== -->
+  <section class="ds" id="cor">
+    <header>
+      <h2>Cor</h2>
+      <p>Treze tokens. Superfícies e bordas seguem a mesma matiz azulada do fundo; o texto é um marfim levemente quente para não vibrar contra o âmbar.</p>
+    </header>
+
+    <p class="sub">Superfícies</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#0b0e14"></div><div class="info"><span class="name">--bg</span><span class="hex">#0b0e14</span><span class="role">Fundo da página e da barra fixa (a 72%)</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#12161f"></div><div class="info"><span class="name">--bg-elevated</span><span class="hex">#12161f</span><span class="role">Cards, modal, dropdown, formulário</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#1b212d"></div><div class="info"><span class="name">--bg-elevated-2</span><span class="hex">#1b212d</span><span class="role">Campos de entrada, chips, pôster sem imagem</span></div></div>
+    </div>
+
+    <p class="sub">Bordas</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#262d3b"></div><div class="info"><span class="name">--border</span><span class="hex">#262d3b</span><span class="role">Contorno padrão de cards, campos e chips</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#1d232f"></div><div class="info"><span class="name">--border-soft</span><span class="hex">#1d232f</span><span class="role">Divisores internos, skeleton, linha da barra fixa</span></div></div>
+    </div>
+
+    <p class="sub">Texto</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#edebe4"></div><div class="info"><span class="name">--text</span><span class="hex">#edebe4</span><span class="role">Títulos e corpo principal</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#8c93a6"></div><div class="info"><span class="name">--text-muted</span><span class="hex">#8c93a6</span><span class="role">Metadados, links de navegação, placeholders, sinopse</span></div></div>
+    </div>
+
+    <p class="sub">Acento</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#e8a33d"></div><div class="info"><span class="name">--accent</span><span class="hex">#e8a33d</span><span class="role">Botão primário, filtro ativo, foco, ponto da marca</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#f2b45a"></div><div class="info"><span class="name">--accent-strong</span><span class="hex">#f2b45a</span><span class="role">Hover do botão, nota ★, eyebrow, ícones em hover</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#1a1206"></div><div class="info"><span class="name">--accent-ink</span><span class="hex">#1a1206</span><span class="role">Texto sobre o âmbar</span></div></div>
+      <div class="swatch"><div class="chip checker" style="--sw:rgba(232,163,61,.14)"></div><div class="info"><span class="name">--accent-soft</span><span class="hex">rgba(232, 163, 61, 0.14)</span><span class="role">Anel de foco, fundo do eyebrow e do item de busca ativo</span></div></div>
+    </div>
+
+    <p class="sub">Semântico</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#e2685a"></div><div class="info"><span class="name">--danger</span><span class="hex">#e2685a</span><span class="role">Texto de erro, hover de "remover da lista"</span></div></div>
+      <div class="swatch"><div class="chip checker" style="--sw:rgba(226,104,90,.12)"></div><div class="info"><span class="name">--danger-soft</span><span class="hex">rgba(226, 104, 90, 0.12)</span><span class="role">Fundo da caixa de erro</span></div></div>
+    </div>
+
+    <p class="sub">Contraste (WCAG 2.1)</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Par</th><th>Razão</th><th>Texto normal</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--text / --bg</td><td class="num">16.19 : 1</td><td><span class="pass">AAA</span></td><td>Corpo e títulos sobre a página</td></tr>
+          <tr><td class="mono">--text / --bg-elevated</td><td class="num">15.17 : 1</td><td><span class="pass">AAA</span></td><td>Título do card e do modal</td></tr>
+          <tr><td class="mono">--text-muted / --bg</td><td class="num">6.29 : 1</td><td><span class="pass">AA</span></td><td>Links de navegação, sinopse do hero</td></tr>
+          <tr><td class="mono">--text-muted / --bg-elevated-2</td><td class="num">5.25 : 1</td><td><span class="pass">AA</span></td><td>Placeholder, metadados dentro de chips</td></tr>
+          <tr><td class="mono">--accent-ink / --accent</td><td class="num">8.59 : 1</td><td><span class="pass">AAA</span></td><td>Rótulo de botão primário</td></tr>
+          <tr><td class="mono">--accent-strong / --bg</td><td class="num">10.53 : 1</td><td><span class="pass">AAA</span></td><td>Nota ★ e eyebrow</td></tr>
+          <tr><td class="mono">--danger / --bg-elevated</td><td class="num">5.48 : 1</td><td><span class="pass">AA</span></td><td>Mensagem de erro no formulário</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:10px">Todos os pares de texto passam AA em tamanho normal. O texto suave sobre <code>--bg-elevated-2</code> é o par mais apertado do sistema; não reduza abaixo de 12px nesse contexto.</p>
+  </section>
+
+  <!-- ===================== TIPOGRAFIA ===================== -->
+  <section class="ds" id="tipografia">
+    <header>
+      <h2>Tipografia</h2>
+      <p>Três famílias com papéis que não se sobrepõem. O corpo fica em 16px com entrelinha 1,5; os títulos apertam o tracking em 1% e a entrelinha até 1,05.</p>
+    </header>
+    <div class="faces">
+      <div class="face display">
+        <span class="fname">--font-display · Fraunces 600</span>
+        <div class="sample">Em alta na Netflix</div>
+        <p class="fuse">Marca, h1, h2 e h3 de conteúdo. Serifa de eixo óptico com personalidade de letreiro. Nunca em botões nem em metadados.</p>
+      </div>
+      <div class="face body">
+        <span class="fname">--font-body · Inter 400 / 500 / 600</span>
+        <div class="sample">Ver detalhes do filme</div>
+        <p class="fuse">Corpo, botões (600), links de navegação e chips de filtro (500), campos de formulário. É o padrão de <code>body</code>.</p>
+      </div>
+      <div class="face mono">
+        <span class="fname">--font-mono · JetBrains Mono 400 / 500</span>
+        <div class="sample">2026 · 161 min ★7.4</div>
+        <p class="fuse">Ano, duração, nota, e-mail do usuário, rótulos de seção em caixa alta com tracking 0,08 a 0,12em, dicas de atalho.</p>
+      </div>
+    </div>
+
+    <p class="sub">Escala em uso</p>
+    <div class="scale">
+      <div class="row"><span class="k">clamp(36–60px)</span><span class="v" style="font-family:var(--font-display);font-size:clamp(2.25rem,4.6vw,3.75rem);line-height:1.05;letter-spacing:-0.01em;font-weight:600">Título do hero</span><span class="u">h1 do hero · 1.05 · −0.01em</span></div>
+      <div class="row"><span class="k">28px · 1.75rem</span><span class="v" style="font-family:var(--font-display);font-size:1.75rem;font-weight:600">Minha lista</span><span class="u">h1 de página e de formulário</span></div>
+      <div class="row"><span class="k">26px · 1.625rem</span><span class="v" style="font-family:var(--font-display);font-size:1.625rem;font-weight:600">Título no modal</span><span class="u">h2 do modal</span></div>
+      <div class="row"><span class="k">22px · 1.375rem</span><span class="v" style="font-family:var(--font-display);font-size:1.375rem;font-weight:600;letter-spacing:-0.01em">PauloFlix</span><span class="u">marca na barra</span></div>
+      <div class="row"><span class="k">20px · 1.25rem</span><span class="v" style="font-family:var(--font-display);font-size:1.25rem;font-weight:600">Em alta no Prime Video</span><span class="u">h2 de carrossel, h2 de estado vazio</span></div>
+      <div class="row"><span class="k">17px · 1.0625rem</span><span class="v" style="font-size:1.0625rem;color:var(--text-muted)">Sinopse curta sob o título do hero, limitada a duas linhas.</span><span class="u">parágrafo do hero · muted</span></div>
+      <div class="row"><span class="k">16px · 1rem</span><span class="v">Corpo padrão e sinopse dentro do modal.</span><span class="u">body · 1.5</span></div>
+      <div class="row"><span class="k">15px · 0.9375rem</span><span class="v" style="font-size:0.9375rem;font-weight:600">Botão primário</span><span class="u">botões, inputs, links da nav (500)</span></div>
+      <div class="row"><span class="k">14px · 0.875rem</span><span class="v" style="font-size:0.875rem;font-weight:600">Título do card de filme</span><span class="u">card, busca, chips de filtro, erro, hint</span></div>
+      <div class="row"><span class="k">13px · 0.8125rem</span><span class="v" style="font-size:0.8125rem;font-family:var(--font-mono);color:var(--text-muted)">2026 · 161 min · paulo@exemplo.com</span><span class="u">metadados do modal, chips de elenco, botão fantasma</span></div>
+      <div class="row"><span class="k">12px · 0.75rem</span><span class="v" style="font-size:0.75rem;font-family:var(--font-mono);color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase">Em alta agora · Elenco</span><span class="u">eyebrow, h3 do modal, sub do card, badge</span></div>
+      <div class="row"><span class="k">11px · 0.6875rem</span><span class="v" style="font-size:0.6875rem;font-family:var(--font-mono);color:var(--text-muted);letter-spacing:0.02em">↑↓ navegar · Enter abrir · Esc fechar</span><span class="u">dica de atalho na busca</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESPAÇO ===================== -->
+  <section class="ds" id="espaco">
+    <header>
+      <h2>Espaço, raio e elevação</h2>
+      <p>O gutter lateral é fluido e único para toda a página. Raios sobem com o tamanho do objeto; pílulas usam 999px. Sombras existem só onde algo flutua sobre outra coisa.</p>
+    </header>
+
+    <p class="sub">Gutter e ritmo</p>
+    <div class="tiles">
+      <div class="tile"><span class="k">--container-pad</span><span class="u"><code>clamp(16px, 4vw, 48px)</code> · padding lateral de nav, hero, carrossel, grade, filtro e estados. Nunca use outro valor para alinhar à borda da página.</span></div>
+      <div class="tile"><span class="k">Gaps entre irmãos</span><div class="gaps">
+        <div class="gap"><i style="width:14px;height:6px"></i><span>6</span></div>
+        <div class="gap"><i style="width:14px;height:8px"></i><span>8</span></div>
+        <div class="gap"><i style="width:14px;height:10px"></i><span>10</span></div>
+        <div class="gap"><i style="width:14px;height:14px"></i><span>14</span></div>
+        <div class="gap"><i style="width:14px;height:18px"></i><span>18</span></div>
+        <div class="gap"><i style="width:14px;height:20px"></i><span>20</span></div>
+      </div><span class="u">6 dentro de itens · 8 chips · 10 nav e meta · 14 carrossel e form · 18 grade · 20 links da nav</span></div>
+      <div class="tile"><span class="k">Blocos verticais</span><span class="u">Carrossel 28px acima · grade 20px acima, 48px abaixo · hero 56px abaixo · formulário 72px de margem · estado vazio 64px</span></div>
+    </div>
+
+    <p class="sub">Raios</p>
+    <div class="tiles">
+      <div class="tile"><div class="demo"><div class="box" style="border-radius:6px"></div></div><span class="k">--radius-sm · 6px</span><span class="u">Botões, inputs, select, badge de provedor, caixa de erro, foco</span></div>
+      <div class="tile"><div class="demo"><div class="box" style="border-radius:10px"></div></div><span class="k">--radius-md · 10px</span><span class="u">Card de filme, skeleton, dropdown de busca</span></div>
+      <div class="tile"><div class="demo"><div class="box" style="border-radius:16px"></div></div><span class="k">--radius-lg · 16px</span><span class="u">Modal e formulário de autenticação</span></div>
+      <div class="tile"><div class="demo"><div class="box" style="border-radius:999px;width:84px;height:32px"></div></div><span class="k">999px · pílula</span><span class="u">Busca, eyebrow, chips de gênero, elenco e filtro</span></div>
+      <div class="tile"><div class="demo"><div class="box" style="border-radius:50%;width:38px;height:38px"></div></div><span class="k">50% · círculo</span><span class="u">Setas do carrossel, fechar modal, limpar busca, ponto da marca</span></div>
+    </div>
+
+    <p class="sub">Elevação</p>
+    <div class="tiles">
+      <div class="tile"><div class="demo"><div class="shadow" style="border-color:rgba(232,163,61,.5);box-shadow:0 14px 28px -12px rgba(232,163,61,.35),0 4px 10px rgba(0,0,0,.4);transform:translateY(-5px)"></div></div><span class="k">Card em hover</span><span class="u"><code>0 14px 28px -12px</code> âmbar 35% + <code>0 4px 10px</code> preto 40%, sobe 5px</span></div>
+      <div class="tile"><div class="demo"><div class="shadow" style="box-shadow:0 20px 40px -12px rgba(0,0,0,.55)"></div></div><span class="k">Dropdown de busca</span><span class="u"><code>0 20px 40px -12px</code> preto 55%</span></div>
+      <div class="tile"><div class="demo"><div class="shadow" style="box-shadow:0 0 0 3px rgba(232,163,61,.14);border-color:var(--accent)"></div></div><span class="k">Foco em campo</span><span class="u">Borda âmbar + anel de 3px em <code>--accent-soft</code></span></div>
+      <div class="tile"><div class="demo"><div class="shadow" style="background:rgba(11,14,20,.72);backdrop-filter:blur(14px)"></div></div><span class="k">Vidro</span><span class="u">Barra fixa: fundo a 72% + <code>blur(14px)</code>. Setas do carrossel: 85% + <code>blur(6px)</code>. Overlay do modal: 72% + <code>blur(4px)</code></span></div>
+    </div>
+  </section>
+
+  <!-- ===================== MOVIMENTO ===================== -->
+  <section class="ds" id="movimento">
+    <header>
+      <h2>Movimento</h2>
+      <p>Cinco durações, uma curva. Tudo o que anima de forma autônoma está dentro de <code>@media (prefers-reduced-motion: no-preference)</code>.</p>
+    </header>
+    <div class="motion">
+      <div class="tile"><div class="demo"><div class="m-card"></div><div class="m-card"></div><div class="m-card"></div></div><span class="k">150 ms · ease</span><span class="u">Cor, borda e translateY de botões, links, filtro. Botão sobe 1px no hover, volta ao clicar.</span></div>
+      <div class="tile"><div class="demo"><div class="m-card is-hover"></div></div><span class="k">200 ms · ease</span><span class="u">Card de filme: sobe 5px, borda e picote ficam âmbar, sombra dupla. Passe o mouse nos cards ao lado.</span></div>
+      <div class="tile"><div class="demo"><div class="m-modal"></div></div><span class="k">250 ms · ease · modal-rise</span><span class="u">Modal entra de 16px abaixo com escala 0,98 e opacidade 0.</span></div>
+      <div class="tile"><div class="demo"><div class="m-rise"></div></div><span class="k">600 ms · ease · hero-rise</span><span class="u">Eyebrow, título, sinopse e CTA do hero sobem 14px em cascata com atraso de 60ms entre eles.</span></div>
+      <div class="tile"><div class="demo"><div class="m-shimmer"></div></div><span class="k">1,6 s · ease-in-out · shimmer</span><span class="u">Brilho diagonal atravessando pôster e linhas do skeleton, em loop.</span></div>
+      <div class="tile"><div class="demo"><span class="mono">scroll-snap: x proximity</span></div><span class="k">Carrossel</span><span class="u">Rolagem suave com encaixe por proximidade; setas só em <code>(hover: hover) and (pointer: fine)</code>.</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== COMPONENTES ===================== -->
+  <section class="ds" id="componentes">
+    <header>
+      <h2>Componentes</h2>
+      <p>Renderizados com as mesmas regras de CSS do produto. Os estados marcados como hover e foco estão congelados para inspeção; os demais respondem ao mouse e ao teclado.</p>
+    </header>
+
+    <p class="sub">Botões</p>
+    <div class="demo-area">
+      <div class="field"><span class="label">primário</span><button type="button">Ver detalhes</button></div>
+      <div class="field"><span class="label">hover</span><button type="button" class="is-hover">Ver detalhes</button></div>
+      <div class="field"><span class="label">desabilitado</span><button type="button" disabled>Entrando…</button></div>
+      <div class="field"><span class="label">na nav</span><button type="button" class="nav-btn">Sair</button></div>
+      <div class="field"><span class="label">fantasma</span><button type="button" class="btn-ghost">Remover da lista</button></div>
+      <div class="field"><span class="label">fantasma hover</span><button type="button" class="btn-ghost is-hover">Remover da lista</button></div>
+      <div class="field"><span class="label">link-button</span><button type="button" class="link-button">Reenviar e-mail de ativação</button></div>
+      <div class="field"><span class="label">ícone</span><span style="display:flex;gap:8px"><button type="button" class="carousel-arrow" aria-label="Anterior">‹</button><button type="button" class="carousel-arrow" aria-label="Próximo">›</button><button type="button" class="modal-close" aria-label="Fechar">×</button></span></div>
+    </div>
+    <div class="spec">
+      <span><b>Primário</b> <code>10px 18px</code> · Inter 600 · 15px · fundo âmbar, texto <code>--accent-ink</code></span>
+      <span><b>Hover</b> <code>--accent-strong</code> e <code>translateY(-1px)</code></span>
+      <span><b>Desabilitado</b> opacidade 0,55 e <code>not-allowed</code></span>
+      <span><b>Fantasma</b> transparente, borda <code>--border</code>, vira vermelho no hover (ação destrutiva)</span>
+      <span><b>Setas</b> 38px, vidro 85% + blur, só com mouse</span>
+      <span><b>Fechar</b> 34px, canto superior direito do modal a 14px</span>
+    </div>
+
+    <p class="sub">Campos</p>
+    <div class="demo-area">
+      <div class="nav-search">
+        <span class="label">busca (pílula com ícone desenhado em CSS)</span>
+        <div class="nav-search-input-wrap" style="margin-top:6px">
+          <input class="nav-search-input" id="ds-search" type="search" placeholder="Buscar filme..." value="Robô selv" aria-label="Buscar filme">
+          <button type="button" class="nav-search-clear" aria-label="Limpar busca">×</button>
+        </div>
+        <div class="nav-search-dropdown" role="listbox">
+          <ul class="nav-search-results">
+            <li><button type="button" class="nav-search-item active"><span class="nav-search-item-placeholder"></span><span class="nav-search-item-info"><span class="nav-search-item-title">Robô Selvagem</span><span class="nav-search-item-sub"><span>2024</span><span class="rating-badge">8.3</span></span></span></button></li>
+            <li><button type="button" class="nav-search-item"><span class="nav-search-item-placeholder"></span><span class="nav-search-item-info"><span class="nav-search-item-title">Robôs</span><span class="nav-search-item-sub"><span>2005</span><span class="rating-badge">6.3</span></span></span></button></li>
+          </ul>
+          <div class="nav-search-hint">↑↓ navegar · Enter abrir · Esc fechar</div>
+        </div>
+      </div>
+      <div class="field" style="flex:1 1 220px"><span class="label">input padrão</span><input id="ds-email" type="email" placeholder="E-mail"></div>
+      <div class="field" style="flex:1 1 220px"><span class="label">input em foco</span><input id="ds-nome" type="text" class="is-focus" value="Paulo Mussolini" aria-label="Nome"></div>
+      <div class="field"><span class="label">select</span><select id="ds-sort" aria-label="Ordenar"><option>Mais populares</option><option>Melhor avaliados</option><option>Mais recentes</option></select></div>
+    </div>
+    <div class="spec">
+      <span><b>Busca</b> raio 999px · <code>9px 32px 9px 34px</code> · ícone lupa em pseudo-elemento, sem SVG</span>
+      <span><b>Input</b> <code>11px 13px</code> · fundo <code>--bg-elevated-2</code> · 15px</span>
+      <span><b>Foco</b> borda âmbar + anel 3px <code>--accent-soft</code>, sem outline</span>
+      <span><b>Dropdown</b> 6px de padding, item ativo com <code>--accent-soft</code>, thumbnail 36px em 2:3</span>
+    </div>
+
+    <p class="sub">Chips e badges</p>
+    <div class="demo-area">
+      <div class="field"><span class="label">eyebrow</span><span class="hero-eyebrow">Em alta agora</span></div>
+      <div class="field"><span class="label">gênero</span><span style="display:flex;gap:8px"><span class="badge">Drama</span><span class="badge">Romance</span><span class="badge">Comédia</span></span></div>
+      <div class="field"><span class="label">provedor · hover</span><span style="display:flex;gap:8px"><span class="provider-badge">Netflix</span><span class="provider-badge is-hover">Prime Video</span></span></div>
+      <div class="field"><span class="label">elenco</span><span class="cast-chip">Mamitha Baiju <span>como Maddy</span></span></div>
+      <div class="field"><span class="label">nota</span><span class="rating-badge" style="font-size:.8125rem">7.4</span></div>
+    </div>
+    <div class="demo-area" style="margin-top:14px">
+      <div class="field" style="width:100%"><span class="label">filtro de streaming (rota /streaming/:providerKey)</span>
+        <nav class="provider-filter" aria-label="Streaming">
+          <a class="provider-filter-item active" href="#componentes">Netflix</a>
+          <a class="provider-filter-item" href="#componentes">Prime Video</a>
+          <a class="provider-filter-item" href="#componentes">Disney+</a>
+          <a class="provider-filter-item" href="#componentes">Max</a>
+          <a class="provider-filter-item" href="#componentes">Globoplay</a>
+          <a class="provider-filter-item" href="#componentes">Apple TV+</a>
+          <a class="provider-filter-item" href="#componentes">Paramount+</a>
+        </nav>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Eyebrow</b> mono 12px, tracking 0,12em, caixa alta, fundo e borda âmbar suaves</span>
+      <span><b>Gênero</b> 12px muted, borda, sem fundo</span>
+      <span><b>Provedor</b> raio 6px (é um link), inverte para âmbar no hover</span>
+      <span><b>Filtro</b> pílula 14px/500; ativo = fundo âmbar com <code>--accent-ink</code></span>
+    </div>
+
+    <p class="sub">Barra de navegação</p>
+    <div class="demo-area" style="padding:14px">
+      <div class="nav-bar">
+        <a class="brand" href="#top">PauloFlix</a>
+        <div class="nav-search" style="order:2"><div class="nav-search-input-wrap"><input class="nav-search-input" id="ds-nav-search" type="search" placeholder="Buscar filme..." aria-label="Buscar filme"></div></div>
+        <div class="nav-links"><a href="#componentes">Início</a><a href="#componentes" class="is-hover">Minha lista</a><span class="nav-user">paulo@exemplo.com</span><button type="button" class="nav-btn">Sair</button></div>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Fixa</b> <code>position: sticky</code> com vidro 72% e <code>blur(14px)</code>, z-index 20</span>
+      <span><b>Ordem</b> marca · busca · links; abaixo de 760px a busca desce para uma linha inteira</span>
+      <span><b>Marca</b> Fraunces 22px com ponto âmbar de 6px via <code>::after</code></span>
+      <span><b>Usuário</b> e-mail em mono 13px muted</span>
+    </div>
+
+    <p class="sub">Hero</p>
+    <div class="hero-mini">
+      <div>
+        <span class="hero-eyebrow">Em alta agora</span>
+        <h1>Robô Selvagem</h1>
+        <p>Depois de um naufrágio, uma robô desperta em uma ilha deserta e precisa aprender a conviver com os animais e criar um filhote de ganso órfão.</p>
+        <a class="hero-cta" href="#componentes">Ver detalhes</a>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Altura</b> <code>min-height: 68vh</code>, conteúdo alinhado ao rodapé, imagem em <code>center 22%</code></span>
+      <span><b>Véu</b> dois gradientes: vertical até <code>--bg</code> e horizontal 85% → 10% a partir da esquerda</span>
+      <span><b>Conteúdo</b> largura máxima 640px, sinopse em 2 linhas com <code>line-clamp</code></span>
+      <span><b>Entrada</b> cascata <code>hero-rise</code> de 0 a 180ms</span>
+    </div>
+
+    <p class="sub">Card de filme (ingresso) e skeleton</p>
+    <div class="demo-area">
+      <div class="cards-row">
+        <a class="movie-card" href="#componentes">
+          <div class="poster p1"><span class="ptitle">Robô Selvagem</span></div>
+          <div class="movie-card-seam"></div>
+          <div class="movie-card-meta"><div class="movie-card-title">Robô Selvagem</div><div class="movie-card-sub"><span>2024</span><span class="rating-badge">8.3</span></div></div>
+        </a>
+        <a class="movie-card is-hover" href="#componentes">
+          <div class="poster p2"><span class="ptitle">Um Sonho de Liberdade</span></div>
+          <div class="movie-card-seam"></div>
+          <div class="movie-card-meta"><div class="movie-card-title">Um Sonho de Liberdade</div><div class="movie-card-sub"><span>1994</span><span class="rating-badge">8.7</span></div></div>
+        </a>
+        <a class="movie-card" href="#componentes">
+          <div class="movie-card-placeholder">Sem pôster</div>
+          <div class="movie-card-seam"></div>
+          <div class="movie-card-meta"><div class="movie-card-title">Título muito longo que precisa ser cortado</div><div class="movie-card-sub"><span>—</span><span class="rating-badge">0.0</span></div></div>
+        </a>
+        <div class="watchlist-item">
+          <a class="movie-card" href="#componentes">
+            <div class="poster p3"><span class="ptitle">Por Que Eu Me Casei de Novo?</span></div>
+            <div class="movie-card-seam"></div>
+            <div class="movie-card-meta"><div class="movie-card-title">Por Que Eu Me Casei de Novo?</div><div class="movie-card-sub"><span>2025</span><span class="rating-badge">6.1</span></div></div>
+          </a>
+          <button type="button" class="btn-ghost">Remover da lista</button>
+        </div>
+        <div class="skeleton-card" aria-hidden="true"><div class="skeleton-poster"></div><div class="skeleton-lines"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Largura</b> 160px no carrossel e na grade (132px e 128px abaixo de 640px), pôster em 2:3</span>
+      <span><b>Picote</b> linha tracejada de 8px com dois furos de 12px na cor <code>--bg</code>; fica âmbar no hover</span>
+      <span><b>Hover</b> sobe 5px, borda âmbar 50%, sombra âmbar 35% (segundo card)</span>
+      <span><b>Meta</b> título 14px/600 em uma linha; ano e nota em mono 12px</span>
+      <span><b>Na lista</b> card + botão fantasma em coluna com gap 8px</span>
+      <span><b>Skeleton</b> mesma geometria, borda suave, shimmer 1,6s</span>
+    </div>
+
+    <p class="sub">Modal de detalhes (rota filme/:tmdbId)</p>
+    <div class="modal-stage">
+      <div class="modal-content" role="dialog" aria-label="Detalhes do filme">
+        <button type="button" class="modal-close" aria-label="Fechar">×</button>
+        <div class="modal-backdrop"></div>
+        <div class="modal-body">
+          <h2>Robô Selvagem</h2>
+          <div class="modal-meta"><span>2024</span><span>·</span><span>102 min</span><span class="rating-badge">8.3</span></div>
+          <div class="badge-row"><span class="badge">Animação</span><span class="badge">Ficção científica</span><span class="badge">Família</span></div>
+          <p class="modal-overview">Depois de um naufrágio, uma robô desperta em uma ilha deserta e precisa aprender a conviver com os animais e criar um filhote de ganso órfão.</p>
+          <div class="modal-providers"><a class="provider-badge" href="#componentes" style="text-decoration:none">Netflix</a><a class="provider-badge" href="#componentes" style="text-decoration:none">Prime Video</a></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin-bottom:8px"><button type="button">Adicionar à minha lista</button><span class="form-hint">Entre para salvar filmes na sua lista.</span></div>
+          <h3>Elenco</h3>
+          <div class="cast-row"><span class="cast-chip">Lupita Nyong'o <span>como Roz</span></span><span class="cast-chip">Pedro Pascal <span>como Fink</span></span><span class="cast-chip">Kit Connor <span>como Brightbill</span></span><span class="cast-chip">Bill Nighy <span>como Longneck</span></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Tamanho</b> até 720px, 88vh de altura com rolagem interna, raio 16px</span>
+      <span><b>Overlay</b> <code>rgba(6,8,12,.72)</code> + <code>blur(4px)</code>, padding 24px, z-index 100</span>
+      <span><b>Backdrop</b> 16:7 com cantos superiores no raio do modal</span>
+      <span><b>Corpo</b> <code>24px 28px 28px</code>; h3 é rótulo mono em caixa alta, não título serifado</span>
+    </div>
+
+    <p class="sub">Formulário de autenticação e estados</p>
+    <div class="two">
+      <div class="demo-area stack">
+        <form class="auth-form" onsubmit="return false">
+          <h1>Criar conta</h1>
+          <p class="form-hint">Enviaremos um link por e-mail para você confirmar o endereço e escolher sua senha.</p>
+          <div class="field"><input id="ds-f-nome" type="text" placeholder="Nome" aria-label="Nome"></div>
+          <div class="field"><input id="ds-f-email" type="email" placeholder="E-mail" aria-label="E-mail"></div>
+          <ul class="form-error"><li>A senha precisa ter pelo menos 8 caracteres.</li><li>Inclua ao menos um número.</li></ul>
+          <button type="submit">Criar conta</button>
+          <a class="form-link" href="#componentes">Já tem conta? Entrar</a>
+        </form>
+      </div>
+      <div class="demo-area stack" style="gap:24px">
+        <div>
+          <span class="label">form-error (uma mensagem)</span>
+          <p class="form-error" style="margin-top:6px">E-mail ou senha incorretos. Confira os dados e tente de novo.</p>
+        </div>
+        <div>
+          <span class="label">empty-state</span>
+          <div class="empty-state" style="border:1px solid var(--border-soft);border-radius:var(--radius-md);margin-top:6px"><h2>Sua lista está vazia</h2><p>Abra um filme e toque em "Adicionar à minha lista" para guardá-lo aqui.</p></div>
+        </div>
+        <div>
+          <span class="label">state-message / carousel-error</span>
+          <p class="state-message">Não foi possível carregar os filmes em alta. Tente novamente em instantes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="spec">
+      <span><b>Formulário</b> 380px, <code>36px 32px</code>, raio 16px, margem 72px auto, gap 14px</span>
+      <span><b>Hint</b> 13px muted, colado ao título com margem −6px</span>
+      <span><b>Erro</b> vermelho sobre <code>--danger-soft</code>, borda vermelha 35%; lista quando há várias regras</span>
+      <span><b>Vazio</b> centrado, 64px de padding vertical, h2 20px</span>
+    </div>
+  </section>
+
+  <!-- ===================== LAYOUT ===================== -->
+  <section class="ds" id="layout">
+    <header>
+      <h2>Layout e responsividade</h2>
+      <p>Dois breakpoints e um gutter fluido. A grade se ajusta sozinha por <code>auto-fill</code>; o carrossel esconde a barra de rolagem e encaixa cards.</p>
+    </header>
+    <div class="bp">
+      <div class="tile"><span class="k">Padrão · acima de 760px</span><span class="u">Nav em uma linha: marca, busca (até 460px), links à direita. Carrossel com cards de 160px e setas em hover. Grade <code>minmax(160px, 1fr)</code> com gap 18px.</span></div>
+      <div class="tile"><span class="k">≤ 760px</span><span class="u">Links da nav sobem para a direita da marca e a busca ocupa a linha inteira abaixo.</span></div>
+      <div class="tile"><span class="k">≤ 640px</span><span class="u">Cards do carrossel a 132px. Grade <code>minmax(128px, 1fr)</code> com gap 12px. Gutter chega a 16px.</span></div>
+      <div class="tile"><span class="k">Mídia de entrada</span><span class="u">Setas do carrossel existem só em <code>(hover: hover) and (pointer: fine)</code>; no toque, a rolagem nativa com snap é o controle.</span></div>
+    </div>
+
+    <p class="sub">Acessibilidade</p>
+    <div class="tiles">
+      <div class="tile"><span class="k">Foco visível</span><span class="u"><code>:focus-visible</code> global com contorno âmbar de 2px e offset 2px. Campos trocam o contorno por borda + anel.</span></div>
+      <div class="tile"><span class="k">Movimento reduzido</span><span class="u">hero-rise, modal-rise e shimmer só rodam em <code>no-preference</code>. Transições de 150 a 200ms permanecem.</span></div>
+      <div class="tile"><span class="k">Teclado na busca</span><span class="u">Setas navegam, Enter abre, Esc fecha; item ativo recebe <code>--accent-soft</code>. Card é um link, então recebe foco e o mesmo hover.</span></div>
+      <div class="tile"><span class="k">Contraste</span><span class="u">Todos os pares de texto passam AA; texto principal e âmbar passam AAA. Ver tabela em Cor.</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== TOKENS ===================== -->
+  <section class="ds" id="tokens">
+    <header>
+      <h2>Tokens</h2>
+      <p>Bloco <code>:root</code> pronto para copiar. É idêntico ao início de <code>src/styles/theme.css</code>; alterar um valor aqui sem alterar lá cria um segundo sistema.</p>
+    </header>
+<pre><span class="c">/* src/styles/theme.css */</span>
+<span class="k">:root</span> {
+  <span class="c">/* Midnight cinema palette */</span>
+  --bg: #0b0e14;
+  --bg-elevated: #12161f;
+  --bg-elevated-2: #1b212d;
+  --border: #262d3b;
+  --border-soft: #1d232f;
+  --text: #edebe4;
+  --text-muted: #8c93a6;
+  --accent: #e8a33d;
+  --accent-strong: #f2b45a;
+  --accent-ink: #1a1206;
+  --accent-soft: rgba(232, 163, 61, 0.14);
+  --danger: #e2685a;
+  --danger-soft: rgba(226, 104, 90, 0.12);
+
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --container-pad: clamp(16px, 4vw, 48px);
+
+  color-scheme: dark;
+}</pre>
+    <p class="note" style="margin-top:14px">Valores que aparecem em componentes mas ainda não são tokens, candidatos a promoção: borda âmbar do eyebrow e do card em hover (<code>rgba(232,163,61,.35)</code> e <code>.5</code>), vidro da nav (<code>rgba(11,14,20,.72)</code>), sombras do card e do dropdown, durações 150/200/250ms.</p>
+  </section>
+
+  <footer class="ds">
+    <span>PauloFlix · Design System v1.0 · setembro de 2026</span>
+    <span>Fonte de verdade: <code>src/styles/theme.css</code> no repositório PauloFlix</span>
+  </footer>
+</main>
